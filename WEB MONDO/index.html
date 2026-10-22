@@ -525,7 +525,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1792691954";</script>
+<script>window.MONDO_BUILD = "1792699175";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1086,7 +1086,7 @@ function boot() {
   useComp(COMP_ORDER[0]);
   /* enlace directo: #premier, #liga… (Premier) o #le, #acb.liga, #eu.semanal… */
   let hash = (location.hash || "").replace("#", "");
-  if (/(^|&)u=/.test(hash)) { hash = ""; try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
+  if (/(^|&)u=/.test(hash)) hash = ""; /* el #u= se queda en la dirección: así cada acceso directo de la pantalla de inicio conserva su participante (Ricardo 22/10) */
   if (hash.includes(".")) { const [k, r] = hash.split("."); if (DATA[k]) useComp(k); hash = r; }
   else if (COMPS[hash] && DATA[hash]) { useComp(hash); hash = "premier"; }
   if (ROUTES[hash] && hash !== "home") { stack.push("home"); if (PARENT[hash] !== "home" && PARENT[hash]) stack.push(PARENT[hash]); state.route = hash; }
