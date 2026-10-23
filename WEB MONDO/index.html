@@ -551,7 +551,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1792766550";</script>
+<script>window.MONDO_BUILD = "1792775608";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -613,7 +613,7 @@ const COMPS = {
   acb: { name: "ACB", ball: "bk", app: "Basketmondo", title: "ACB SJD 2026-27", mi: "RICARDO", ligaPrize: 3, genPrize: 3, marks: [10], cuota: 75, semWord: "dos", champ: null, basket: true },
   eu:  { name: "Euroliga", ball: "bk", app: "Basketmondo", title: "Euroliga SJD 2026-27", mi: "RICATHINAIKOS", ligaPrize: 3, genPrize: 3, marks: [10], cuota: 75, semWord: "dos", champ: null, basket: true }
 };
-let COMP_ORDER = ["premier", "le", "acb", "eu"];
+let COMP_ORDER = ["le", "premier", "acb", "eu"]; // Liga Española primero en la portada (Ricardo 23/10)
 const ALL_COMPS = COMP_ORDER.slice();
 /* tarjeta de una competición sin acceso: se ve, pero con la tecla roja (candado) */
 const lockedTile = k => { const c = COMPS[k]; return `<div class="tile locked"><span class="grow"><span class="name"><span class="nw"><img class="mini" src="${c.ball === "bk" ? MINI_BK : MINI_FB}" alt="">${c.name}</span></span></span><button class="go locked" data-locked="${k}" aria-label="${c.name}: acceso restringido">${LOCK_SVG}</button></div>`; };
