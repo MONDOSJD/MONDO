@@ -180,7 +180,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @keyframes keyBreath { from { scale: 1; filter: brightness(.82) saturate(1.05); } to { scale: 1.07; filter: brightness(1.12); } }
 @media (prefers-reduced-motion: reduce) { .back, .go { animation: none; } }
 /* los dos reflejos blancos de las teclas giran despacio (Ricardo 21/10) */
-.back::before, .go::before { animation: keySpin .7s linear infinite; animation-delay: var(--ph, 0s); } /* rapidísimo, para probar (Ricardo 22/10; antes 9 s por vuelta) */
+.back::before, .go::before { animation: keySpin 1.1s linear infinite; animation-delay: var(--ph, 0s); } /* algo más lento (Ricardo 23/10: antes .7 s, rapidísimo; originalmente 9 s por vuelta) */
 @media (prefers-reduced-motion: reduce) { .back::before, .go::before { animation: none; } }
 /* Otros equipos: un equipo por línea, cada uno con su tecla de entrar */
 /* Liga Española, ACB y Euroliga (20/10/2026) */
@@ -536,7 +536,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1792756001";</script>
+<script>window.MONDO_BUILD = "1792756307";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
