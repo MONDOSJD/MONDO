@@ -204,10 +204,11 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .matches.lg .tm .s.pendbox { height: 26px; }
 .melist .pendtag { display: inline-block; padding: 4px 8px; border-radius: 7px; background: #FFC000; color: #3A2A00; font: 700 12px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; }
 .match .provtag { position: absolute; top: -8px; right: 10px; background: #FFC000; color: #3A2A00; font: 700 10px/1 var(--font-display); letter-spacing: .06em; text-transform: uppercase; padding: 3px 6px; border-radius: 6px; }
-table.pj th.part { background: #FFE080; color: #3A2A00; }
-table.pj td.part:not(.best1):not(.best2) { background: #FFF3C4; }
-.sw.s3 { background: #FFE080; border-color: #E0B300; }
-.mejpts div.part { background: #FFF3C4; border-color: #F0C850; }
+/* naranja único para todo lo suspendido / sin terminar = #FFC000 (Ricardo 23/10) */
+table.pj th.part { background: #FFC000; color: #3A2A00; }
+table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; }
+.sw.s3 { background: #FFC000; border-color: #E0A800; }
+.mejpts div.part { background: #FFC000; border-color: #E0A800; color: #3A2A00; }
 .teamlist { display: grid; grid-template-columns: minmax(0,1fr); gap: 6px; }
 .teamlist .trow { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px 12px 4px 14px; min-height: 46px; }
 .teamlist .go { width: 32px; height: 32px; margin: 4px 6px; }
@@ -535,7 +536,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1792749589";</script>
+<script>window.MONDO_BUILD = "1792756001";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
