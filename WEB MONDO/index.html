@@ -290,6 +290,12 @@ table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; 
 .ticker .tk span em { font-style: normal; color: var(--ink2); margin-left: 4px; font-weight: 600; }
 .ticker .tk span.lbl { color: #9C7A00; }
 .card .ticker { margin-top: 8px; }
+/* cinta de "Jornada N cerrada" con fondo negro (Ricardo 23/10), letras claras como el cartel de Última actualización */
+.ticker { background: #000; }
+.ticker .tk span { color: #7CF0A8; }
+.ticker .tk span b { color: #FFFFFF; }
+.ticker .tk span em { color: #B9C6BE; }
+.ticker .tk span.lbl { color: #FFD43B; }
 .ticker .tk.tk-once { padding-left: 100%; }
 .ticker .tk.tk-once span:last-child::after { content: none; }
 .ticker .tk span.tk-gap { display: inline-block; padding: 0; }
@@ -545,7 +551,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1792757071";</script>
+<script>window.MONDO_BUILD = "1792766550";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
