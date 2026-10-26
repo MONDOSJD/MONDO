@@ -407,6 +407,13 @@ table.pj tr.me.hl td:first-child { box-shadow: inset 4px 0 0 #4A9BE0; }
 .chip.closed { background: #E3E5E2; border-color: #D2D5D1; }
 .chip.pendj { background: #FFC000; border-color: #E0A800; color: #3A2A00; }
 .chip[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+/* verde SOLO para la jornada que toca (la siguiente por jugar) (Ricardo 26/10); la que estás viendo no cambia de color, solo lleva un marco oscuro */
+.chip[aria-selected="true"] { background: var(--surface); border-color: var(--line); color: var(--ink2); }
+.chip.closed[aria-selected="true"] { background: #E3E5E2; border-color: #D2D5D1; color: var(--ink); }
+.chip.pendj[aria-selected="true"] { background: #FFC000; border-color: #E0A800; color: #3A2A00; }
+.chip.next, .chip.next[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chip[aria-selected="true"] { box-shadow: inset 0 0 0 2px #16231D; }
+.chip.next[aria-selected="true"] { box-shadow: inset 0 0 0 2px #0B3D24; }
 .sec { margin: 22px 0 8px; font: 600 13px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink2); }
 
 /* clasificacion */
@@ -551,7 +558,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793024159";</script>
+<script>window.MONDO_BUILD = "1793024613";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -826,7 +833,8 @@ function ligaView() {
       liga.tabla.map((t,i) => `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos${i<C.ligaPrize?" prize":""}">${i+1}</span><span class="nm">${esc(nm(t.eq))}</span>${pj ? `<span class="num">${t.pj}</span>` : ""}<span class="pts">${lpts(t.pts)}</span><span class="eur">${prizeOf(t) ? fmt(prizeOf(t)) + " €" : ""}</span></div>`).join("") + `</div>`;
   } else {
     const key = "liga" + CK, sel = state.sel[key] || lastLiga;
-    h += `<div class="chips" id="chipsLiga">${liga.jornadas.map(j => `<button class="chip${playedLiga.includes(j.num)?" done":""}${jState(j.sets.flat())}" data-sel="${key}:${j.num}" aria-selected="${j.num===sel}">J${j.num}${j.doble?`<small class="dbl">DOBLE</small>`:""}</button>`).join("")}</div>`;
+    const nextLiga = (liga.jornadas.find(j => j.num > lastLiga) || {}).num; /* la que toca en liga regular (Ricardo 26/10) */
+    h += `<div class="chips" id="chipsLiga">${liga.jornadas.map(j => `<button class="chip${playedLiga.includes(j.num)?" done":""}${jState(j.sets.flat())}${j.num === nextLiga ? " next" : ""}" data-sel="${key}:${j.num}" aria-selected="${j.num===sel}">J${j.num}${j.doble?`<small class="dbl">DOBLE</small>`:""}</button>`).join("")}</div>`;
     const J = liga.jornadas.find(j => j.num === sel) || liga.jornadas[0];
     h += J.sets.map((s,i) => (J.sets.length>1 ? `<div class="setlabel">Partidos ${i+1} de 2 · jornada doble</div>` : "") + `<div class="matches lg">${s.map(m => matchHTML(m, hasRes(J.sets.flat()))).join("")}${restHTML(J.rest && J.rest[i], J.restVal && J.restVal[i], hasRes(J.sets.flat()))}</div>`).join("");
     if (hasPend(J.sets.flat())) h += PEND_LEGEND;
@@ -866,7 +874,8 @@ function champView() {
   const key = "champ" + CK + cur;
   const sel = state.sel[key] || lastChamp;
   const lastC = lastResNum(G.jornadas, j => j.m), gapC = j => !hasRes(j.m) && j.num < lastC;
-  h += `<div class="sec">Resultados</div><div class="chips">${G.jornadas.map(j => `<button class="chip${j.m.some(m=>m[2]!==null)?" done":""}${gapC(j) ? " pendj" : jState(j.m)}" data-sel="${key}:${j.num}" aria-selected="${j.num===sel}">J${j.num}</button>`).join("")}</div>`;
+  const nextC = (G.jornadas.find(j => j.num > lastC) || {}).num; /* la que toca en Champions (Ricardo 26/10) */
+  h += `<div class="sec">Resultados</div><div class="chips">${G.jornadas.map(j => `<button class="chip${j.m.some(m=>m[2]!==null)?" done":""}${gapC(j) ? " pendj" : jState(j.m)}${j.num === nextC ? " next" : ""}" data-sel="${key}:${j.num}" aria-selected="${j.num===sel}">J${j.num}</button>`).join("")}</div>`;
   const J = G.jornadas.find(j => j.num === sel) || G.jornadas[0];
   h += `<div class="matches">${J.m.map(m => matchHTML(m, hasRes(J.m) || gapC(J))).join("")}${restHTML(J.rest)}</div>`;
   if (hasPend(J.m) || gapC(J)) h += PEND_LEGEND;
