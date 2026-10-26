@@ -423,6 +423,11 @@ table.pj tr.me.hl td:first-child { box-shadow: inset 4px 0 0 #4A9BE0; }
 .row.hl::after, .match.hl::after { background: linear-gradient(90deg, transparent, var(--hl-shine), transparent); }
 table.pj tr.me.hl td { background-color: var(--hl-bg); background-image: linear-gradient(90deg, rgba(255,255,255,0) 38%, var(--hl-shine2) 50%, rgba(255,255,255,0) 62%); }
 .chip.closed, .chip.closed[aria-selected="true"] { background: var(--chip-closed); border-color: var(--chip-closed-line); }
+/* marco de la jornada que estás viendo: oscuro en modo claro, BLANCO en modo oscuro (Ricardo 26/10) */
+:root { --sel-ring: #16231D; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sel-ring: #FFFFFF; } }
+:root[data-theme="dark"] { --sel-ring: #FFFFFF; }
+.chip[aria-selected="true"]:not(.next) { box-shadow: inset 0 0 0 2px var(--sel-ring); }
 .sec { margin: 22px 0 8px; font: 600 13px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink2); }
 
 /* clasificacion */
@@ -567,7 +572,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793045520";</script>
+<script>window.MONDO_BUILD = "1793045784";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
