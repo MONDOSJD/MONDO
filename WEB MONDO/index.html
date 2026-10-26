@@ -2,6 +2,7 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0B0F0D"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Mondo"></head><body>
 <title>Mondo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700;800&display=swap">
@@ -414,6 +415,14 @@ table.pj tr.me.hl td:first-child { box-shadow: inset 4px 0 0 #4A9BE0; }
 .chip.next, .chip.next[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .chip[aria-selected="true"] { box-shadow: inset 0 0 0 2px #16231D; }
 .chip.next[aria-selected="true"] { box-shadow: inset 0 0 0 3px #0B0F0D; }
+/* MODO OSCURO del móvil (Ricardo 26/10): el resaltado del propio equipo y las pestañas de jornadas cerradas tenían fondo claro fijo y el texto (claro en modo oscuro) no se leía. Ahora van con variables que cambian solas según el modo del teléfono */
+:root { --hl-bg: #E3F1FF; --hl-shine: rgba(255,255,255,.65); --hl-shine2: rgba(255,255,255,.9); --chip-closed: #E3E5E2; --chip-closed-line: #D2D5D1; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hl-bg: #1D3A57; --hl-shine: rgba(255,255,255,.14); --hl-shine2: rgba(255,255,255,.22); --chip-closed: #2E3B35; --chip-closed-line: #45554D; } }
+:root[data-theme="dark"] { --hl-bg: #1D3A57; --hl-shine: rgba(255,255,255,.14); --hl-shine2: rgba(255,255,255,.22); --chip-closed: #2E3B35; --chip-closed-line: #45554D; }
+.row.hl, .row.me.hl, .match.hl { background: var(--hl-bg); }
+.row.hl::after, .match.hl::after { background: linear-gradient(90deg, transparent, var(--hl-shine), transparent); }
+table.pj tr.me.hl td { background-color: var(--hl-bg); background-image: linear-gradient(90deg, rgba(255,255,255,0) 38%, var(--hl-shine2) 50%, rgba(255,255,255,0) 62%); }
+.chip.closed, .chip.closed[aria-selected="true"] { background: var(--chip-closed); border-color: var(--chip-closed-line); }
 .sec { margin: 22px 0 8px; font: 600 13px/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink2); }
 
 /* clasificacion */
@@ -558,7 +567,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793025644";</script>
+<script>window.MONDO_BUILD = "1793045520";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
