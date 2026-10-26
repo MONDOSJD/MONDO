@@ -541,6 +541,9 @@ ol.normas .nk { display: grid; place-items: center; min-width: 30px; height: 26p
 .potbl .x small { display: block; font: 700 11px/1.2 var(--font-display); letter-spacing: .05em; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
 .potbl .c { display: block; text-align: center; padding: 10px 2px; border-radius: 9px; background: var(--surface2); font: 700 19px/1 var(--font-display); color: var(--ink); min-height: 40px; box-sizing: border-box; }
 .potbl .c.tot { background: var(--accent-soft); }
+/* playoff en MODO OSCURO (Ricardo 26/10): las casillas de resultado en blanco (el total, verde muy claro); en modo claro no cambia nada */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .potbl .c { background: #FFFFFF; color: #16231D; } :root:not([data-theme="light"]) .potbl .c.tot { background: #CDEFD9; color: #0B3D24; } }
+:root[data-theme="dark"] .potbl .c { background: #FFFFFF; color: #16231D; } :root[data-theme="dark"] .potbl .c.tot { background: #CDEFD9; color: #0B3D24; }
 .potbl.fin .r { grid-template-columns: 96px 80px minmax(0,1fr); gap: 8px; }
 .potbl.fin .c { min-height: 48px; padding: 14px 2px; font-size: 21px; }
 .potbl.fin .r.h span:nth-child(1) { text-align: left; }
@@ -572,7 +575,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793045784";</script>
+<script>window.MONDO_BUILD = "1793045994";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
