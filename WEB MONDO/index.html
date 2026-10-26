@@ -575,7 +575,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793045994";</script>
+<script>window.MONDO_BUILD = "1793046343";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -770,7 +770,10 @@ const isBest = (p, j, eq) => (p == null || (j && (sg.partial || []).includes(j))
 const prizeOf = t => +t.premio || 0;
 
 /* ---------- vistas ---------- */
-function meCls(eq) { return state.hl && canon(eq) === state.hl ? " me hl" : MINE && eq === MINE ? " me" : ""; }
+/* el propio equipo (el de quien entra: MI_EQUIPO) va SIEMPRE con el barrido azul en todas las clasificaciones y partidos, se llegue por donde se llegue (Ricardo 26/10) */
+const isMe = eq => !!MI_EQUIPO && canon(eq) === canon(MI_EQUIPO);
+const isHl = eq => (state.hl && canon(eq) === state.hl) || isMe(eq);
+function meCls(eq) { return isHl(eq) ? " me hl" : MINE && eq === MINE ? " me" : ""; }
 const LOCK_SVG = '<svg viewBox="0 0 24 24"><rect x="6" y="11" width="12" height="9" rx="2"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg>';
 const GO_SVG = '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>';
 
@@ -831,14 +834,14 @@ function matchHTML(m, pend) {
   const [a,b,sa,sb,flag0] = m; const played = sa !== null && sa !== undefined;
   const flag = flag0 || (!played && pend ? "pend" : "");
   const hw = played && sa > sb, aw = played && sb > sa;
-  const meMatch = (MINE && (a === MINE || b === MINE)) || (state.hl && (canon(a) === state.hl || canon(b) === state.hl));
+  const meMatch = (MINE && (a === MINE || b === MINE)) || isHl(a) || isHl(b);
   const line = (t, s, w, l) => `<div class="tm${w?" w":""}${l?" l":""}${played?"":" p"}" data-tm="${esc(canon(t))}"><span class="n">${esc(nm(t))}</span>${flag ? `<span class="s pendbox">${played ? fmt(s) : ""}</span>` : `<span class="s">${played ? fmt(s) : "–"}</span>`}</div>`;
-  return `<div class="match${meMatch?" me":""}${state.hl && (canon(a) === state.hl || canon(b) === state.hl) ? " hl" : ""}">${line(a, sa, hw, aw)}${line(b, sb, aw, hw)}</div>`;
+  return `<div class="match${meMatch?" me":""}${isHl(a) || isHl(b) ? " hl" : ""}">${line(a, sa, hw, aw)}${line(b, sb, aw, hw)}</div>`;
 }
 /* quien descansa en un bloque (Liga Española, ACB y Euroliga); en baloncesto, con lo que suma por su puesto en la jornada */
 const restHTML = (name, val, pend) => !name ? "" : C.basket
   /* baloncesto (Ricardo 21/10): quien descansa va en su propia casilla de partido, solo él y lo que suma, sin "Descansa" */
-  ? `<div class="match solo${state.hl === canon(name) ? " me hl" : MINE && canon(name) === MINE ? " me" : ""}"><div class="tm${val != null ? " w" : " p"}" data-tm="${esc(canon(name))}"><span class="n">${esc(nm(name))}</span>${val != null ? `<span class="s">${lpts(val)}</span>` : pend ? `<span class="s pendbox"></span>` : `<span class="s">–</span>`}</div></div>`
+  ? `<div class="match solo${isHl(name) ? " me hl" : MINE && canon(name) === MINE ? " me" : ""}"><div class="tm${val != null ? " w" : " p"}" data-tm="${esc(canon(name))}"><span class="n">${esc(nm(name))}</span>${val != null ? `<span class="s">${lpts(val)}</span>` : pend ? `<span class="s pendbox"></span>` : `<span class="s">–</span>`}</div></div>`
   : `<div class="restline"><span>Descansa</span><b data-tm="${esc(canon(name))}">${esc(nm(name))}</b>${val != null ? `<em>${lpts(val)}</em>` : ""}</div>`;
 
 function ligaView() {
@@ -910,14 +913,14 @@ function sgView() {
     h += `<div class="tbl g4"><div class="row head"><span></span><span>Equipo</span><span class="num">Pts</span><span class="num">€</span></div>` +
       rows.map((t,i) => `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos${i<C.genPrize?" prize":""}">${i+1}</span><span class="nm">${esc(nm(t.eq))}</span><span class="pts">${t.total}</span><span class="eur">${sg.premiosGeneral[i] ? sg.premiosGeneral[i] + " €" : ""}</span></div>`).join("") + `</div>`;
     h += `<div class="sec">Puntos por jornada</div><div class="scroll"><table class="pj"><thead><tr><th>Equipo</th>${Array.from({length:nj},(_,i)=>th(i)).join("")}</tr></thead><tbody>` +
-      rows.map(t => `<tr class="${state.hl===canon(t.eq)?"me hl":MINE===t.eq?"me":""}" data-tm="${esc(canon(t.eq))}"><td>${esc(nm(t.eq))}</td>${t.pts.map((p,i) => `<td style="--i:${i+1}" class="${isBest(p,i+1,t.eq)?"best"+isBest(p,i+1,t.eq):""}${partial.includes(i+1)?" part":""}">${p ?? ""}</td>`).join("")}</tr>`).join("") + `</tbody></table></div>`;
+      rows.map(t => `<tr class="${isHl(t.eq)?"me hl":MINE===t.eq?"me":""}" data-tm="${esc(canon(t.eq))}"><td>${esc(nm(t.eq))}</td>${t.pts.map((p,i) => `<td style="--i:${i+1}" class="${isBest(p,i+1,t.eq)?"best"+isBest(p,i+1,t.eq):""}${partial.includes(i+1)?" part":""}">${p ?? ""}</td>`).join("")}</tr>`).join("") + `</tbody></table></div>`;
     h += `<div class="legend"><span><i class="sw s1"></i><b>${C.marks.length > 1 ? "Mejor marca" : "Mejor marca del año"}</b> · ${fmt(C.marks[0])} €</span>${C.marks.length > 1 ? `<span><i class="sw s2"></i><b>2ª mejor marca</b> · ${fmt(C.marks[1])} €</span>` : ""}${partial.length ? `<span><i class="sw s3"></i><b>Jornada sin terminar</b></span>` : ""}</div>`;
   } else {
     const rows = sg.semanal.slice().sort((a,b)=>b.total-a.total || ((sg.general.find(g=>g.eq===b.eq)||{total:0}).total - (sg.general.find(g=>g.eq===a.eq)||{total:0}).total));
     h += `<div class="tbl g2 sem"><div class="row head"><span></span><span>Equipo</span><span class="num">Premios</span></div>` +
       rows.map((t,i) => `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos">${i+1}</span><span class="nm">${esc(nm(t.eq))}</span><span class="pts">${eur2(t.total)}</span></div>`).join("") + `</div>`;
     h += `<div class="sec">Euros por jornada</div><div class="scroll"><table class="pj eurj"><thead><tr><th>Equipo</th>${Array.from({length:nj},(_,i)=>th(i)).join("")}</tr></thead><tbody>` +
-      rows.map(t => `<tr class="${state.hl===canon(t.eq)?"me hl":MINE===t.eq?"me":""}" data-tm="${esc(canon(t.eq))}"><td>${esc(nm(t.eq))}</td>${t.eur.map((p,i) => `<td style="--i:${i+1}"><span class="cell${p == null ? " empty" : ""}">${p == null ? "" : (Math.round(p*100)/100).toFixed(2).replace(".", ",")}</span></td>`).join("")}</tr>`).join("") + `</tbody></table></div>`;
+      rows.map(t => `<tr class="${isHl(t.eq)?"me hl":MINE===t.eq?"me":""}" data-tm="${esc(canon(t.eq))}"><td>${esc(nm(t.eq))}</td>${t.eur.map((p,i) => `<td style="--i:${i+1}"><span class="cell${p == null ? " empty" : ""}">${p == null ? "" : (Math.round(p*100)/100).toFixed(2).replace(".", ",")}</span></td>`).join("")}</tr>`).join("") + `</tbody></table></div>`;
     h += `<div class="prizebox">${sg.premiosSemanal.map(x => { const m = String(x).trim().match(/^(\S+)\s+(.*)$/); return `<div><b>${esc(m ? m[1] : x)}</b><span>${esc(m ? m[2] : "")}</span></div>`; }).join("")}</div>
       <p class="note">${NORMAS_SG_TIE}</p>`;
   }
