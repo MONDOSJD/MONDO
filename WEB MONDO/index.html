@@ -279,6 +279,15 @@ table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; 
   to   { filter: drop-shadow(0 0 1.5px #FFFFFF) drop-shadow(0 0 5px rgba(255,255,255,.75)) drop-shadow(0 0 11px rgba(255,255,255,.45)); }
 }
 @media (prefers-reduced-motion: reduce) { .logo > canvas.lg-ball { animation: none; } }
+/* explosión de luz (Ricardo 27/10): cuando el halo crece, sale del balón un destello blanco en rayos hacia fuera, los 360 grados, y se apaga mientras se aleja */
+.logo::before, .logo::after { content: ""; position: absolute; left: 16.15%; top: 16.15%; width: 67.70%; height: 67.70%; border-radius: 50%; pointer-events: none; opacity: 0; z-index: -1; }
+.logo::before { background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.95) 0deg 2.2deg, rgba(255,255,255,0) 2.2deg 12deg);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%); mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%);
+  filter: blur(.8px); animation: ballBurst 5.2s ease-out infinite; }
+.logo::after { background: radial-gradient(circle closest-side, rgba(255,255,255,0) 55%, rgba(255,255,255,.75) 66%, rgba(255,255,255,0) 100%); animation: ballFlash 5.2s ease-out infinite; }
+@keyframes ballBurst { 0%, 42% { opacity: 0; transform: scale(.95) rotate(0deg); } 50% { opacity: 1; transform: scale(1.15) rotate(4deg); } 72% { opacity: 0; transform: scale(1.9) rotate(9deg); } 100% { opacity: 0; transform: scale(1.9) rotate(9deg); } }
+@keyframes ballFlash { 0%, 44% { opacity: 0; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } 66% { opacity: 0; transform: scale(1.55); } 100% { opacity: 0; transform: scale(1.55); } }
+@media (prefers-reduced-motion: reduce) { .logo::before, .logo::after { animation: none; } }
 .logo { display: block; flex: none; width: clamp(104px, 34vw, 160px); height: clamp(104px, 34vw, 160px); }
 /* balón + aro se mueven despacio a derecha e izquierda: del borde izquierdo del panel hasta casi tocar la M de MONDO (Ricardo 19/10/2026). --from y --to los calcula fitDrift() */
 .frame .brand .logo { z-index: 1; animation: drift 9s ease-in-out infinite alternate; }
@@ -584,7 +593,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793090813";</script>
+<script>window.MONDO_BUILD = "1793091016";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
