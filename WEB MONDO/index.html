@@ -294,6 +294,8 @@ table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; 
 .frame .brand .word { position: relative; z-index: 2; }
 @keyframes drift { from { transform: translateX(var(--from, 0px)); } to { transform: translateX(var(--to, 0px)); } }
 @media (prefers-reduced-motion: reduce) { .frame .brand .logo { animation: none; } }
+/* sin el vaivén hacia la M y de vuelta (Ricardo 27/10): el balón se queda quieto en su sitio, solo gira */
+.frame .brand .logo { animation: none; transform: none; }
 .tag { margin: 10px 0 0; color: var(--ink2); max-width: 30ch; }
 .tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 .tile { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; min-height: 76px; }
@@ -593,7 +595,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793091253";</script>
+<script>window.MONDO_BUILD = "1793091444";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
