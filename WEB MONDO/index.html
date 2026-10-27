@@ -577,7 +577,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793090177";</script>
+<script>window.MONDO_BUILD = "1793090503";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1372,6 +1372,25 @@ else loadUser().then(ok => {
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+/* web de participantes (Ricardo 27/10): si el móvil tiene guardada una versión vieja, al abrir la app (o volver a ella) mira si hay una versión nueva publicada y, si la hay, se recarga sola con ella. Solo en la web de participantes (window.MONDO_BUILD); una sola recarga por versión para no entrar en bucle */
+(function () {
+  if (!window.MONDO_BUILD || !window.fetch) return;
+  let busy = false;
+  async function check() {
+    if (busy) return; busy = true;
+    try {
+      const txt = await (await fetch(location.pathname + "?chk=" + Date.now(), { cache: "no-store" })).text();
+      const m = txt.match(/MONDO_BUILD = "(\d+)"/);
+      if (m && m[1] !== window.MONDO_BUILD) {
+        let done = ""; try { done = sessionStorage.getItem("mondo.reloadTo") || ""; } catch (e) {}
+        if (done !== m[1]) { try { sessionStorage.setItem("mondo.reloadTo", m[1]); } catch (e) {} location.replace(location.pathname + "?v=" + m[1] + location.hash); return; }
+      }
+    } catch (e) {}
+    busy = false;
+  }
+  check();
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") check(); });
 })();
 </script>
 
