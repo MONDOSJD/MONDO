@@ -281,9 +281,9 @@ table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; 
 @media (prefers-reduced-motion: reduce) { .logo > canvas.lg-ball { animation: none; } }
 /* explosión de luz (Ricardo 27/10): cuando el halo crece, sale del balón un destello blanco en rayos hacia fuera, los 360 grados, y se apaga mientras se aleja */
 .logo::before, .logo::after { content: ""; position: absolute; left: 16.15%; top: 16.15%; width: 67.70%; height: 67.70%; border-radius: 50%; pointer-events: none; opacity: 0; z-index: -1; }
-.logo::before { background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.95) 0deg 2.2deg, rgba(255,255,255,0) 2.2deg 12deg);
+.logo::before { background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.7) 0deg, rgba(255,255,255,0) 15deg, rgba(255,255,255,.7) 30deg); /* más disimulado (Ricardo 27/10): 12 rayos anchos y suaves en vez de muchos picos */
   -webkit-mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%); mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%);
-  filter: blur(.8px); animation: ballBurst 5.2s ease-out infinite; }
+  filter: blur(3px); animation: ballBurst 5.2s ease-out infinite; }
 .logo::after { background: radial-gradient(circle closest-side, rgba(255,255,255,0) 55%, rgba(255,255,255,.75) 66%, rgba(255,255,255,0) 100%); animation: ballFlash 5.2s ease-out infinite; }
 @keyframes ballBurst { 0%, 42% { opacity: 0; transform: scale(.95) rotate(0deg); } 50% { opacity: 1; transform: scale(1.15) rotate(4deg); } 72% { opacity: 0; transform: scale(1.9) rotate(9deg); } 100% { opacity: 0; transform: scale(1.9) rotate(9deg); } }
 @keyframes ballFlash { 0%, 44% { opacity: 0; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } 66% { opacity: 0; transform: scale(1.55); } 100% { opacity: 0; transform: scale(1.55); } }
@@ -593,7 +593,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793091016";</script>
+<script>window.MONDO_BUILD = "1793091145";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
