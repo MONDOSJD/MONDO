@@ -593,7 +593,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793091145";</script>
+<script>window.MONDO_BUILD = "1793091253";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1223,14 +1223,14 @@ else loadUser().then(ok => {
     const dt = last ? Math.min((t - last) / 1000, 0.05) : 0.016; last = t;
     G.back = document.querySelector(".logo .ml-back"); G.front = document.querySelector(".logo .ml-front");
     if (t > next) {                              // nuevo eje y velocidad al azar
-      const u = rnd(-1, 1), a = rnd(0, 2 * Math.PI), r = Math.sqrt(1 - u*u), sp = rnd(0.35, 1.9);   // giro del aro (bajado otra vez ~30 % el 20/10/2026; antes 0.5–2.7, y al principio 0.8–4.2)
+      const u = rnd(-1, 1), a = rnd(0, 2 * Math.PI), r = Math.sqrt(1 - u*u), sp = rnd(0.25, 1.35);   // giro del aro (más lento otra vez ~30 % el 27/10/2026, Ricardo; antes 0.35–1.9) (bajado otra vez ~30 % el 20/10/2026; antes 0.5–2.7, y al principio 0.8–4.2)
       wt = [r * Math.cos(a) * sp, r * Math.sin(a) * sp, u * sp];
       next = t + rnd(900, 2600);
     }
     for (let i = 0; i < 3; i++) w[i] += (wt[i] - w[i]) * Math.min(1, dt * 1.6);
     const mag = Math.hypot(w[0], w[1], w[2]);
     if (mag > 1e-4) M = mul(axisRot([w[0]/mag, w[1]/mag, w[2]/mag], mag * dt), M);
-    head += dt * 1.35;
+    head += dt * 0.95; /* luz verde que recorre el aro, ~30 % más lenta (Ricardo 27/10; antes 1.35) */
     if (G.back && G.front) {
       const full = paths(0, 2 * Math.PI, N); set("base", full); set("halo", full);
       set("tail", paths(head - 1.5, head, 30));
@@ -1239,7 +1239,7 @@ else loadUser().then(ok => {
       set("core", paths(head - 0.22, head, 8));
       /* estrella-joya amarilla que recorre el aro */
       const sv = 2.7 + 0.6 * Math.sin(t / 900) + 0.3 * Math.sin(t / 333);   // nunca se para: una vuelta cada ~2,3 s (bajado ~30 % el 20/10/2026)
-      star += dt * sv;
+      star += dt * sv * 0.7; /* estrella del aro ~30 % más lenta (Ricardo 27/10) */
       const sp = pt(star), front = sp[2] >= 0;
       set("strail", paths(star - 0.9, star, 20)); set("strail2", paths(star - 0.45, star, 12));
       /* vida: tono (amarillo -> naranja -> rojizo), brillo y resplandor cambiantes */
@@ -1357,7 +1357,7 @@ else loadUser().then(ok => {
   function frame(t) {
     const dt = last ? Math.min((t - last) / 1000, 0.05) : 0.016; last = t;
     if (t > next && !drag) {
-      const uu = rnd(-1, 1), a = rnd(0, 2*Math.PI), r = Math.sqrt(1 - uu*uu), sp = rnd(0.4, 2.2);   // giro del balón (bajado ~30 % el 20/10/2026; antes 0.6–3.2)
+      const uu = rnd(-1, 1), a = rnd(0, 2*Math.PI), r = Math.sqrt(1 - uu*uu), sp = rnd(0.28, 1.55);   // giro del balón (más lento otra vez ~30 % el 27/10/2026, Ricardo; antes 0.4–2.2) (bajado ~30 % el 20/10/2026; antes 0.6–3.2)
       wt = [r * Math.cos(a) * sp, r * Math.sin(a) * sp, uu * sp];
       next = t + rnd(1200, 3200);
     }
