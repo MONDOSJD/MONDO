@@ -293,6 +293,9 @@ table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; 
   -webkit-mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%); mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%);
   filter: blur(3px); }
 .logo::before, .logo::after { animation: ballBurst2 2s ease-out infinite; }
+/* destello en AMARILLO en vez de blanco (Ricardo 27/10) */
+.logo::before { background: repeating-conic-gradient(from 0deg, rgba(255,224,0,1) 0deg, rgba(255,224,0,0) 15deg, rgba(255,224,0,1) 30deg); }
+.logo::after { background: repeating-conic-gradient(from 15deg, rgba(255,224,0,1) 0deg, rgba(255,224,0,0) 15deg, rgba(255,224,0,1) 30deg); }
 .logo::after { animation-delay: -1s; }
 @keyframes ballBurst2 { 0% { opacity: 0; transform: scale(.98) rotate(0deg); } 18% { opacity: .9; transform: scale(1.12) rotate(2deg); } 100% { opacity: 0; transform: scale(1.85) rotate(8deg); } }
 @media (prefers-reduced-motion: reduce) { .logo::before, .logo::after { animation: none; } }
@@ -606,7 +609,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793099919";</script>
+<script>window.MONDO_BUILD = "1793100068";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
