@@ -575,7 +575,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793046343";</script>
+<script>window.MONDO_BUILD = "1793081561";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -772,7 +772,7 @@ const prizeOf = t => +t.premio || 0;
 /* ---------- vistas ---------- */
 /* el propio equipo (el de quien entra: MI_EQUIPO) va SIEMPRE con el barrido azul en todas las clasificaciones y partidos, se llegue por donde se llegue (Ricardo 26/10) */
 const isMe = eq => !!MI_EQUIPO && canon(eq) === canon(MI_EQUIPO);
-const isHl = eq => (state.hl && canon(eq) === state.hl) || isMe(eq);
+const isHl = eq => state.hl ? canon(eq) === state.hl : isMe(eq); /* si vienes de la ficha de OTRO equipo (Otros equipos), solo se marca ese, el protagonista; el tuyo no (Ricardo 27/10) */
 function meCls(eq) { return isHl(eq) ? " me hl" : MINE && eq === MINE ? " me" : ""; }
 const LOCK_SVG = '<svg viewBox="0 0 24 24"><rect x="6" y="11" width="12" height="9" rx="2"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg>';
 const GO_SVG = '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>';
