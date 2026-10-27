@@ -159,6 +159,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .mepage .megrid.c3 .mebox .big b.money { min-width: 0; width: 100%; padding: 0 6px; font-size: 21px; }
 .mepage .megrid.c3 .mebox.money { grid-column: 1 / -1; padding: 9px 12px 11px; }
 .mepage .megrid.c3 .mebox.money .lb { font-size: 13px; }
+/* cajas de puesto (General, Liga Regular, Champions) en Cómo voy / Cómo va (Ricardo 27/10, las 4 competiciones): el cuadro del puesto más pequeño y los puntos más grandes */
+.mepage .megrid.c3 .mebox .big b:not(.money) { min-width: 31px; height: 31px; font-size: 19px; border-radius: 8px; padding: 0 4px; }
+.mepage .megrid.c3 .mebox .big span { font-size: 25px; }
+.mepage .megrid.c3 .mebox .big span small { font-size: 12px; }
 
 @media (prefers-reduced-motion: reduce) { .back, .go, .back::before, .go::before, .back::after, .go::after { animation: none; } }
 /* teclas de volver y entrar como un PULSADOR ARCADE ILUMINADO (Ricardo 20/10/2026, foto de referencia: botón LED verde menta con cúpula brillante y aro negro grueso). Antes: amarillas, luego verde mosca, luego turquesa */
@@ -613,7 +617,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793104223";</script>
+<script>window.MONDO_BUILD = "1793109192";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
