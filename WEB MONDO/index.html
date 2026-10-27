@@ -288,6 +288,14 @@ table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; 
 @keyframes ballBurst { 0%, 42% { opacity: 0; transform: scale(.95) rotate(0deg); } 50% { opacity: 1; transform: scale(1.15) rotate(4deg); } 72% { opacity: 0; transform: scale(1.9) rotate(9deg); } 100% { opacity: 0; transform: scale(1.9) rotate(9deg); } }
 @keyframes ballFlash { 0%, 44% { opacity: 0; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } 66% { opacity: 0; transform: scale(1.55); } 100% { opacity: 0; transform: scale(1.55); } }
 @media (prefers-reduced-motion: reduce) { .logo::before, .logo::after { animation: none; } }
+/* destello continuo (Ricardo 27/10): sale un destello cada segundo, sin pausas, y cada uno se aleja despacio (2 s) hasta apagarse; dos capas iguales desfasadas 1 s */
+.logo::after { background: repeating-conic-gradient(from 15deg, rgba(255,255,255,.7) 0deg, rgba(255,255,255,0) 15deg, rgba(255,255,255,.7) 30deg);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%); mask: radial-gradient(circle closest-side, transparent 0 58%, #000 66%, rgba(0,0,0,.6) 82%, transparent 100%);
+  filter: blur(3px); }
+.logo::before, .logo::after { animation: ballBurst2 2s ease-out infinite; }
+.logo::after { animation-delay: -1s; }
+@keyframes ballBurst2 { 0% { opacity: 0; transform: scale(.98) rotate(0deg); } 18% { opacity: .9; transform: scale(1.12) rotate(2deg); } 100% { opacity: 0; transform: scale(1.85) rotate(8deg); } }
+@media (prefers-reduced-motion: reduce) { .logo::before, .logo::after { animation: none; } }
 .logo { display: block; flex: none; width: clamp(104px, 34vw, 160px); height: clamp(104px, 34vw, 160px); }
 /* balón + aro se mueven despacio a derecha e izquierda: del borde izquierdo del panel hasta casi tocar la M de MONDO (Ricardo 19/10/2026). --from y --to los calcula fitDrift() */
 .frame .brand .logo { z-index: 1; animation: drift 9s ease-in-out infinite alternate; }
@@ -598,7 +606,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793099445";</script>
+<script>window.MONDO_BUILD = "1793099919";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
