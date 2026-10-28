@@ -655,7 +655,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793229331";</script>
+<script>window.MONDO_BUILD = "1793229629";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1138,35 +1138,43 @@ function cronicaJ() { /* jornadas con puntos: de la 1 a la última jugada */
   return mx;
 }
 function cronicaText(T, N) {
+  /* crónica deportiva de la jornada N del equipo T, hasta 100 palabras (Ricardo 29/10): frases con prioridad; si pasa de 100 palabras se quitan las menos importantes */
   const pick = (arr, salt) => { let h = 0; const s = T + N + salt; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return arr[h % arr.length]; };
+  const B = x => `<b>${x}</b>`, NM = x => B(esc(nm(x)));
   const name = esc(nm(T)), partial = (sg.partial || []).includes(N);
   const gt = sg.general.find(t => canon(t.eq) === T) || { pts: [] }, sem = sg.semanal.find(t => canon(t.eq) === T) || { eur: [] };
   const p = gt.pts[N - 1], eur = sem.eur[N - 1] || 0;
-  let score = 0; const parts = [];
+  let score = 0; const S = []; /* {t: texto, pr: prioridad (más alto = más importante)} */
+  const say = (t, pr) => { if (t) S.push({ t, pr }); };
+  /* cómo se cuenta un partido según la diferencia */
+  const mtxt = (x, z = "") => {
+    const op = NM(x.op), sc = `(${fmt(x.gf)}-${fmt(x.gc)})`, hi = Math.max(x.gf, x.gc) || 1, rel = Math.abs(x.gf - x.gc) / hi;
+    if (x.r === "v") return rel >= .35 ? pick([`arrolló a ${op} ${sc}`, `pasó por encima de ${op} ${sc}`, `le dio un repaso a ${op} ${sc}`], "V" + z + x.op)
+      : rel <= .06 ? pick([`ganó por la mínima a ${op} ${sc}`, `sacó un triunfo muy apretado ante ${op} ${sc}`], "v1" + z + x.op)
+      : pick([`ganó a ${op} ${sc}`, `se impuso a ${op} ${sc}`, `derrotó a ${op} ${sc}`], "v" + z + x.op);
+    if (x.r === "d") return rel >= .35 ? pick([`fue arrollado por ${op} ${sc}`, `recibió un serio correctivo de ${op} ${sc}`, `naufragó ante ${op} ${sc}`], "D" + z + x.op)
+      : rel <= .06 ? pick([`cayó por muy poco ante ${op} ${sc}`, `se le escapó por un suspiro ante ${op} ${sc}`], "d1" + z + x.op)
+      : pick([`cayó ante ${op} ${sc}`, `perdió contra ${op} ${sc}`], "d" + z + x.op);
+    return `firmó tablas con ${op} ${sc}`;
+  };
   /* liga regular */
   const restOf = (j, si) => j.rest && j.rest[si] ? { name: j.rest[si], val: j.restVal ? j.restVal[si] : null, played: hasRes(j.sets.flat()) } : null;
-  const lm = teamMatches(liga.jornadas, T, j => j.sets, restOf).filter(x => x.j === N);
-  const mtxt = (x, comp) => {
-    const op = `<b>${esc(nm(x.op))}</b>`, sc = `(${fmt(x.gf)}-${fmt(x.gc)})`;
-    if (x.pend) return `su partido contra ${op} sigue sin terminar`;
-    if (!x.played) return "";
-    if (x.r === "v") return pick([`ganó a ${op} ${sc}`, `se impuso a ${op} ${sc}`, `derrotó a ${op} ${sc}`], "v" + x.op);
-    if (x.r === "d") return pick([`cayó ante ${op} ${sc}`, `perdió contra ${op} ${sc}`], "d" + x.op);
-    return `empató con ${op} ${sc}`;
-  };
-  const lt = [];
-  const lpend = lm.filter(x => !x.rest && x.pend).map(x => `<b>${esc(nm(x.op))}</b>`);
+  const lmAll = teamMatches(liga.jornadas, T, j => j.sets, restOf), lm = lmAll.filter(x => x.j === N);
+  const lt = [], lpend = lm.filter(x => !x.rest && x.pend).map(x => NM(x.op));
   lm.forEach(x => {
-    if (x.rest) { if (x.played) lt.push(`descansó${x.val != null ? ` y sumó <b>${lpts(x.val)}</b>` : ""}`); return; }
-    if (x.pend) return;
-    const t = mtxt(x); if (t) lt.push(t);
-    if (x.played && !x.pend) score += x.r === "v" ? 2 : x.r === "d" ? -2 : 0;
+    if (x.rest) { if (x.played) lt.push(`descansó${x.val != null ? ` y sumó ${B(lpts(x.val))}` : ""}`); return; }
+    if (x.pend || !x.played) return;
+    lt.push(mtxt(x)); score += x.r === "v" ? 2 : x.r === "d" ? -2 : 0;
   });
   if (lpend.length) lt.push(lpend.length > 1 ? `sus partidos contra ${lpend.join(" y ")} siguen sin terminar` : `su partido contra ${lpend[0]} sigue sin terminar`);
   if (lt.length) {
     let s = "En Liga Regular " + lt.join(" y ");
-    if (N === lastLiga) { const li = liga.tabla.findIndex(t => canon(t.eq) === T); if (li >= 0) s += `, y es <b>${ORD(li + 1)}</b> en la clasificación`; }
-    parts.push(s);
+    /* racha: resultados seguidos iguales hasta esta jornada */
+    const seq = lmAll.filter(x => !x.rest && x.played && !x.pend && x.j <= N).map(x => x.r);
+    let k = 0; const last = seq[seq.length - 1]; for (let i = seq.length - 1; i >= 0 && seq[i] === last; i--) k++;
+    if (lm.some(x => !x.rest && x.played && !x.pend) && k >= 3 && last !== "e") s += last === "v" ? ` y ya encadena ${B(k + " victorias")} seguidas` : ` y acumula ${B(k + " derrotas")} consecutivas`;
+    if (N === lastLiga) { const li = liga.tabla.findIndex(t => canon(t.eq) === T); if (li >= 0) s += `; es ${B(ORD(li + 1))} en la clasificación${li < C.ligaPrize ? ", en zona de premios" : ""}`; }
+    say(s, 9);
   }
   /* champions */
   if (champ) {
@@ -1174,56 +1182,70 @@ function cronicaText(T, N) {
     if (g) {
       const cm = teamMatches(champ[g].jornadas, T, j => [j.m], j => j.rest ? { name: j.rest, val: null, played: j.m.some(m => m[2] !== null) } : null).filter(x => x.j === N);
       cm.forEach(x => {
-        if (x.rest) { if (x.played) parts.push(`En Champions descansó`); return; }
-        let t = mtxt(x); if (!t) return; t = "En Champions " + t;
+        if (x.rest) { if (x.played) say(`En Champions descansó`, 4); return; }
+        let t = x.pend ? `su partido contra ${NM(x.op)} sigue sin terminar` : x.played ? mtxt(x, "ch") : ""; if (!t) return; t = "En Champions " + t;
         if (x.played && !x.pend) score += x.r === "v" ? 1 : x.r === "d" ? -1 : 0;
-        if (N === lastChamp) { const ci = champ[g].clas.findIndex(t => canon(t.eq) === T); if (ci >= 0) t += `, y es <b>${ORD(ci + 1)}</b> del grupo ${g}`; }
-        parts.push(t);
+        if (N === lastChamp) { const ci = champ[g].clas.findIndex(t => canon(t.eq) === T); if (ci >= 0) t += `; es ${B(ORD(ci + 1))} del grupo ${g}${ci < C.champ.pass ? ", en puestos de clasificación" : ", fuera de los puestos de clasificación"}`; }
+        say(t, 8);
       });
     }
   }
-  /* semanal */
-  let semS = "";
+  /* la semana: puntos, puesto entre todos, premio, comparación con su media y con el mejor */
   if (p != null) {
-    const all = sg.general.map(t => t.pts[N - 1]).filter(v => v != null), n = all.length, rk = 1 + all.filter(v => v > p).length;
+    const rows = sg.general.map(t => ({ eq: canon(t.eq), v: t.pts[N - 1] })).filter(r => r.v != null), n = rows.length, rk = 1 + rows.filter(r => r.v > p).length;
     score += rk <= 3 ? 2 : rk <= Math.ceil(n / 3) ? 1 : rk > n - Math.ceil(n / 3) ? -1 : 0;
     const top = rk === 1 ? `la mejor puntuación de la semana` : rk === n ? `la peor de la semana` : `la ${rk}ª mejor de los ${n}`;
-    semS = `${partial ? "Lleva" : "Hizo"} <b>${p} puntos</b>, ${top}` + (eur > 0 ? `, y se lleva <b>${eur2(eur)}</b> de premio semanal` : partial ? "" : ", sin premio semanal");
+    say(`${partial ? "Lleva" : "Firmó"} ${B(p + " puntos")}, ${top}` + (eur > 0 ? `, y se embolsa ${B(eur2(eur))} de premio semanal` : partial ? "" : ", sin premio semanal"), 7);
     if (eur > 0) score += 1;
+    const best = rows.slice().sort((a, b) => b.v - a.v)[0];
+    if (best && rk > 1) say(`El mejor de la jornada fue ${NM(best.eq)}, con ${best.v}`, 2);
+    const prev = gt.pts.slice(0, N - 1).filter((v, i) => v != null && !(sg.partial || []).includes(i + 1));
+    if (prev.length >= 2) {
+      const avg = Math.round(prev.reduce((a, v) => a + v, 0) / prev.length), d = p - avg;
+      if (Math.abs(d) >= 8) say(d > 0 ? pick([`Muy por encima de su media de la temporada (${avg})`, `Una puntuación que mejora con creces su media (${avg})`], "avg") : pick([`Lejos de su media de la temporada (${avg})`, `Por debajo de lo que acostumbra: su media es de ${avg}`], "avg"), 3);
+    }
   }
-  /* general */
-  let genS = "";
+  /* general: sube/baja, distancia con el de arriba o ventaja sobre el segundo, zona de premios */
   const a = genRank(N, T), b = N > 1 ? genRank(N - 1, T) : null;
   if (a) {
-    if (!b) genS = `En la General arranca <b>${ORD(a.pos)}</b>`;
-    else if (a.pos < b.pos) { genS = pick([`En la General sube del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b> puesto`, `En la General escala del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b>`], "gu"); score += 1; }
-    else if (a.pos > b.pos) { genS = pick([`En la General baja del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b> puesto`, `En la General cae del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b>`], "gd"); score -= 1; }
-    else genS = `En la General se mantiene <b>${ORD(a.pos)}</b>`;
-    genS += `, con ${a.s} puntos`;
+    let g;
+    if (!b) g = `En la General arranca ${B(ORD(a.pos))}`;
+    else if (a.pos < b.pos) { g = pick([`En la General sube del ${ORD(b.pos)} al ${B(ORD(a.pos))} puesto`, `En la General escala del ${ORD(b.pos)} al ${B(ORD(a.pos))}`], "gu"); score += 1; }
+    else if (a.pos > b.pos) { g = pick([`En la General baja del ${ORD(b.pos)} al ${B(ORD(a.pos))} puesto`, `En la General cae del ${ORD(b.pos)} al ${B(ORD(a.pos))}`], "gd"); score -= 1; }
+    else g = `En la General se mantiene ${B(ORD(a.pos))}`;
+    g += `, con ${a.s} puntos`;
+    const tot = sg.general.map(t => ({ eq: canon(t.eq), s: t.pts.slice(0, N).reduce((x, v) => x + (v || 0), 0) })).sort((x, y) => y.s - x.s);
+    if (a.pos === 1 && tot[1]) g += tot[1].s < a.s ? ` y ${B((a.s - tot[1].s) + " de ventaja")} sobre ${NM(tot[1].eq)}` : "";
+    else { const up = tot.filter(x => x.s > a.s).pop(); if (up) g += `, a ${B(up.s - a.s)} del puesto de arriba`; }
+    g += a.pos <= C.genPrize ? ", dentro de los premios" : "";
+    say(g, 6);
   }
   /* mejores marcas */
-  let markS = "";
   if (!partial) {
     const now = marksUpTo(N), bef = marksUpTo(N - 1);
     const holds = (L, k) => L[k] && L[k].eq === T, mine = (L, k) => holds(L, k) && L[k].j === N;
     const nk = C.marks.length;
-    if (mine(now, 0)) { markS = `¡Y firma la <b>mejor marca</b> de la temporada, premiada con ${eur2(C.marks[0])}!`; score += 2; }
-    else if (nk > 1 && mine(now, 1)) { markS = `Además firma la <b>2ª mejor marca</b> de la temporada, premiada con ${eur2(C.marks[1])}.`; score += 2; }
-    else if (holds(bef, 0) && !holds(now, 0) && !(nk > 1 && holds(now, 1))) { markS = `Pierde la mejor marca, que ahora es de <b>${esc(nm(now[0].eq))}</b>.`; score -= 1; }
-    else if (holds(bef, 0) && nk > 1 && holds(now, 1) && !holds(now, 0)) { markS = `Pierde la mejor marca, que se lleva <b>${esc(nm(now[0].eq))}</b>, aunque conserva la 2ª.`; score -= 1; }
-    else if (nk > 1 && holds(bef, 1) && !holds(now, 1) && !holds(now, 0)) { markS = `Se queda sin la 2ª mejor marca, que pasa a <b>${esc(nm(now[1].eq))}</b>.`; score -= 1; }
+    if (mine(now, 0)) { say(`¡Y firma la ${B("mejor marca")} de la temporada, premiada con ${eur2(C.marks[0])}!`, 10); score += 2; }
+    else if (nk > 1 && mine(now, 1)) { say(`Además firma la ${B("2ª mejor marca")} de la temporada, premiada con ${eur2(C.marks[1])}`, 10); score += 2; }
+    else if (holds(bef, 0) && !holds(now, 0) && !(nk > 1 && holds(now, 1))) { say(`Pierde la mejor marca, que ahora es de ${NM(now[0].eq)}`, 9); score -= 1; }
+    else if (holds(bef, 0) && nk > 1 && holds(now, 1) && !holds(now, 0)) { say(`Pierde la mejor marca, que se lleva ${NM(now[0].eq)}, aunque conserva la 2ª`, 9); score -= 1; }
+    else if (nk > 1 && holds(bef, 1) && !holds(now, 1) && !holds(now, 0)) { say(`Se queda sin la 2ª mejor marca, que pasa a ${NM(now[1].eq)}`, 9); score -= 1; }
   }
-  const verdict = score >= 5 ? pick(["Jornada redonda", "Semana de las que se recuerdan", "Jornada para enmarcar"], "x")
-    : score >= 2 ? pick(["Buena jornada", "Semana positiva", "Jornada con nota"], "x")
-    : score >= -1 ? pick(["Jornada de luces y sombras", "Semana irregular", "Jornada a medias"], "x")
-    : pick(["Jornada para olvidar", "Semana negra", "Jornada aciaga"], "x");
+  /* titular y cierre según cómo fue la jornada */
+  const mood = score >= 5 ? 3 : score >= 2 ? 2 : score >= -1 ? 1 : 0;
+  const verdict = [pick(["Jornada para olvidar", "Semana negra", "Jornada aciaga"], "x"), pick(["Jornada de luces y sombras", "Semana irregular", "Jornada a medias"], "x"),
+    pick(["Buena jornada", "Semana positiva", "Jornada con nota"], "x"), pick(["Jornada redonda", "Semana de las que se recuerdan", "Jornada para enmarcar"], "x")][mood];
+  const nextJ = lmAll.find(x => x.j > N && !x.rest), nextTxt = nextJ ? ` ante ${NM(nextJ.op)}` : "";
+  const close = [pick([`Toca levantarse${nextTxt} en la próxima jornada`, `Necesita reaccionar cuanto antes${nextTxt}`], "c"), pick([`Habrá que afinar más${nextTxt} en la próxima`, `La próxima jornada${nextTxt} dirá hacia dónde se inclina`], "c"),
+    pick([`Buen paso adelante; la próxima jornada${nextTxt}, a confirmarlo`, `Va por buen camino; ahora toca seguir${nextTxt}`], "c"), pick([`Semana para sacar pecho; la próxima${nextTxt}, a seguir la racha`, `Está lanzado; la próxima jornada${nextTxt}, a mantener el nivel`], "c")][mood];
+  if (!partial) say(close, 1);
+  const head = `${verdict} para ${B(name)}${partial ? " (jornada aún sin terminar)" : ""}`;
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-  let txt = `${verdict} para <b>${name}</b>${partial ? " (jornada aún sin terminar)" : ""}. `;
-  parts.forEach(x => txt += cap(x) + ". ");
-  if (semS) txt += semS + ". ";
-  if (genS) txt += genS + ". ";
-  if (markS) txt += markS;
-  return { txt: txt.trim(), score };
+  const words = list => (head + " " + list.map(x => x.t).join(" ")).replace(/<[^>]+>/g, "").split(/\s+/).filter(Boolean).length;
+  let keep = S.slice();
+  while (words(keep) > 100 && keep.length) { const lo = keep.reduce((m, x) => x.pr < m.pr ? x : m, keep[0]); keep = keep.filter(x => x !== lo); }
+  const txt = head + ". " + keep.map(x => { const t = cap(x.t); return /[.!?]$/.test(t) ? t : t + "."; }).join(" ");
+  return { txt, score };
 }
 function cronicaView() {
   const T = MI_EQUIPO, maxJ = cronicaJ();
