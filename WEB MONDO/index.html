@@ -577,6 +577,8 @@ ol.normas .nk { display: grid; place-items: center; min-width: 30px; height: 26p
 .nhead { margin: 22px 0 10px; padding: 10px 16px; border-radius: 12px; background: #FFD43B; border: 2px solid #E0B300; box-shadow: 0 3px 8px rgba(120,90,0,.2); color: #000; font: 800 24px/1.1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; }
 .nhead:first-child { margin-top: 14px; }
 .nhead.phead { font-size: 20px; margin: 20px 0 10px; }
+/* titulares y caja de premios en AMARILLO MUY CLARITO para no confundirlos con el naranja de "sin terminar" (Ricardo 28/10, claro y oscuro) */
+.nhead, .mebox.money { background: #FFF4B8; border-color: #E9D27A; box-shadow: 0 3px 8px rgba(120,90,0,.14); }
 .potbl { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .potbl .r { display: grid; grid-template-columns: 24px minmax(0,1fr) repeat(var(--n), 56px); gap: 6px; align-items: center; padding: 9px 10px; border-top: 1px solid var(--line); }
 .potbl .r:first-child { border-top: 0; }
@@ -623,7 +625,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793184334";</script>
+<script>window.MONDO_BUILD = "1793185320";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
