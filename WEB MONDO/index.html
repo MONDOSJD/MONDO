@@ -611,6 +611,13 @@ ol.normas .nk { display: grid; place-items: center; min-width: 30px; height: 26p
 .potbl.fin .x small { position: absolute; left: 0; bottom: 100%; margin: 0 0 3px; white-space: nowrap; }
 .prizebox { margin: 16px 0 0; display: inline-grid; gap: 6px; padding: 12px 18px; border-radius: 10px; background: #4DF04D; color: #0A1F0A; font: 700 17px/1.1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 2px 8px rgba(30,140,30,.25); }
 .prizebox div { display: grid; grid-template-columns: 34px auto; }
+/* Mi crónica (Ricardo 28/10) */
+.cronica { margin: 0 0 12px; padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid #9AA39C; }
+.cronica p { margin: 0; font: 500 17px/1.5 var(--font-body); color: var(--ink); }
+.cronica p b { font-weight: 700; }
+.cronica.top { border-left-color: #39FF6A; } .cronica.good { border-left-color: #1E7A4C; } .cronica.mid { border-left-color: #FFC000; } .cronica.bad { border-left-color: #D90429; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cronica { background: #2E3532; border-top-color: #4A5450; border-right-color: #4A5450; border-bottom-color: #4A5450; } }
+:root[data-theme="dark"] .cronica { background: #2E3532; border-top-color: #4A5450; border-right-color: #4A5450; border-bottom-color: #4A5450; }
 .sgfoot { display: flex; flex-wrap: nowrap; align-items: center; gap: 14px; }
 .sgfoot .pendlegend { margin: 16px 0 0; max-width: none; flex: 1 1 auto; min-width: 0; }
 .sgfoot .pendlegend .pendbox, .sgfoot .prizebox { flex: none; }
@@ -640,7 +647,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793211492";</script>
+<script>window.MONDO_BUILD = "1793221349";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -878,6 +885,7 @@ function premier() {
     ${card("Liga Regular", clasTicker(), "liga")}
     ${champ ? card("Champions", champTicker(), "champions") : ""}
     ${card("Semanal y General", genTicker(), "semanal")}
+    ${card("Mi crónica", `<span class="me-sub">Tu jornada contada</span>`, "cronica")}
     ${card("Normas", "", "normas")}
   </div></div>`;
 }
@@ -1104,6 +1112,124 @@ function normasView() {
   return `<div class="nhead">Liga Regular</div>${list(N.liga)}${N.champ ? `<div class="nhead">Champions</div>${list(N.champ)}` : ""}<div class="nhead">Semanal y General</div>${list(sgn)}`;
 }
 
+/* ---------- Mi crónica (Ricardo 28/10/2026, en prueba): crónica corta (≈50-60 palabras) de cómo le fue la jornada a tu equipo, sacada de los datos ---------- */
+const ORD = n => n + "º";
+function marksUpTo(n) {
+  const all = [], partial = sg.partial || [];
+  sg.general.forEach(t => t.pts.forEach((p, i) => { if (p != null && i + 1 <= n && !partial.includes(i + 1)) all.push({ eq: canon(t.eq), j: i + 1, p }); }));
+  all.sort((a, b) => b.p - a.p || a.j - b.j);
+  return all;
+}
+function genRank(n, T) { /* puesto en la General con lo sumado hasta la jornada n (empates: mismo puesto) */
+  const tot = sg.general.map(t => ({ eq: canon(t.eq), s: t.pts.slice(0, n).reduce((a, p) => a + (p || 0), 0) }));
+  const me = tot.find(x => x.eq === T); if (!me) return null;
+  return { pos: 1 + tot.filter(x => x.s > me.s).length, s: me.s };
+}
+function cronicaJ() { /* jornadas con puntos: de la 1 a la última jugada */
+  let mx = 0; sg.general.forEach(t => t.pts.forEach((p, i) => { if (p != null) mx = Math.max(mx, i + 1); }));
+  return mx;
+}
+function cronicaText(T, N) {
+  const pick = (arr, salt) => { let h = 0; const s = T + N + salt; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return arr[h % arr.length]; };
+  const name = esc(nm(T)), partial = (sg.partial || []).includes(N);
+  const gt = sg.general.find(t => canon(t.eq) === T) || { pts: [] }, sem = sg.semanal.find(t => canon(t.eq) === T) || { eur: [] };
+  const p = gt.pts[N - 1], eur = sem.eur[N - 1] || 0;
+  let score = 0; const parts = [];
+  /* liga regular */
+  const restOf = (j, si) => j.rest && j.rest[si] ? { name: j.rest[si], val: j.restVal ? j.restVal[si] : null, played: hasRes(j.sets.flat()) } : null;
+  const lm = teamMatches(liga.jornadas, T, j => j.sets, restOf).filter(x => x.j === N);
+  const mtxt = (x, comp) => {
+    const op = `<b>${esc(nm(x.op))}</b>`, sc = `(${fmt(x.gf)}-${fmt(x.gc)})`;
+    if (x.pend) return `su partido contra ${op} sigue sin terminar`;
+    if (!x.played) return "";
+    if (x.r === "v") return pick([`ganó a ${op} ${sc}`, `se impuso a ${op} ${sc}`, `derrotó a ${op} ${sc}`], "v" + x.op);
+    if (x.r === "d") return pick([`cayó ante ${op} ${sc}`, `perdió contra ${op} ${sc}`], "d" + x.op);
+    return `empató con ${op} ${sc}`;
+  };
+  const lt = [];
+  const lpend = lm.filter(x => !x.rest && x.pend).map(x => `<b>${esc(nm(x.op))}</b>`);
+  lm.forEach(x => {
+    if (x.rest) { if (x.played) lt.push(`descansó${x.val != null ? ` y sumó <b>${lpts(x.val)}</b>` : ""}`); return; }
+    if (x.pend) return;
+    const t = mtxt(x); if (t) lt.push(t);
+    if (x.played && !x.pend) score += x.r === "v" ? 2 : x.r === "d" ? -2 : 0;
+  });
+  if (lpend.length) lt.push(lpend.length > 1 ? `sus partidos contra ${lpend.join(" y ")} siguen sin terminar` : `su partido contra ${lpend[0]} sigue sin terminar`);
+  if (lt.length) {
+    let s = "En Liga Regular " + lt.join(" y ");
+    if (N === lastLiga) { const li = liga.tabla.findIndex(t => canon(t.eq) === T); if (li >= 0) s += `, y es <b>${ORD(li + 1)}</b> en la clasificación`; }
+    parts.push(s);
+  }
+  /* champions */
+  if (champ) {
+    const g = ["A", "B"].find(k => champ[k].clas.some(t => canon(t.eq) === T));
+    if (g) {
+      const cm = teamMatches(champ[g].jornadas, T, j => [j.m], j => j.rest ? { name: j.rest, val: null, played: j.m.some(m => m[2] !== null) } : null).filter(x => x.j === N);
+      cm.forEach(x => {
+        if (x.rest) { if (x.played) parts.push(`En Champions descansó`); return; }
+        let t = mtxt(x); if (!t) return; t = "En Champions " + t;
+        if (x.played && !x.pend) score += x.r === "v" ? 1 : x.r === "d" ? -1 : 0;
+        if (N === lastChamp) { const ci = champ[g].clas.findIndex(t => canon(t.eq) === T); if (ci >= 0) t += `, y es <b>${ORD(ci + 1)}</b> del grupo ${g}`; }
+        parts.push(t);
+      });
+    }
+  }
+  /* semanal */
+  let semS = "";
+  if (p != null) {
+    const all = sg.general.map(t => t.pts[N - 1]).filter(v => v != null), n = all.length, rk = 1 + all.filter(v => v > p).length;
+    score += rk <= 3 ? 2 : rk <= Math.ceil(n / 3) ? 1 : rk > n - Math.ceil(n / 3) ? -1 : 0;
+    const top = rk === 1 ? `la mejor puntuación de la semana` : rk === n ? `la peor de la semana` : `la ${rk}ª mejor de los ${n}`;
+    semS = `${partial ? "Lleva" : "Hizo"} <b>${p} puntos</b>, ${top}` + (eur > 0 ? `, y se lleva <b>${eur2(eur)}</b> de premio semanal` : partial ? "" : ", sin premio semanal");
+    if (eur > 0) score += 1;
+  }
+  /* general */
+  let genS = "";
+  const a = genRank(N, T), b = N > 1 ? genRank(N - 1, T) : null;
+  if (a) {
+    if (!b) genS = `En la General arranca <b>${ORD(a.pos)}</b>`;
+    else if (a.pos < b.pos) { genS = pick([`En la General sube del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b> puesto`, `En la General escala del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b>`], "gu"); score += 1; }
+    else if (a.pos > b.pos) { genS = pick([`En la General baja del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b> puesto`, `En la General cae del ${ORD(b.pos)} al <b>${ORD(a.pos)}</b>`], "gd"); score -= 1; }
+    else genS = `En la General se mantiene <b>${ORD(a.pos)}</b>`;
+    genS += `, con ${a.s} puntos`;
+  }
+  /* mejores marcas */
+  let markS = "";
+  if (!partial) {
+    const now = marksUpTo(N), bef = marksUpTo(N - 1);
+    const holds = (L, k) => L[k] && L[k].eq === T, mine = (L, k) => holds(L, k) && L[k].j === N;
+    const nk = C.marks.length;
+    if (mine(now, 0)) { markS = `¡Y firma la <b>mejor marca</b> de la temporada, premiada con ${eur2(C.marks[0])}!`; score += 2; }
+    else if (nk > 1 && mine(now, 1)) { markS = `Además firma la <b>2ª mejor marca</b> de la temporada, premiada con ${eur2(C.marks[1])}.`; score += 2; }
+    else if (holds(bef, 0) && !holds(now, 0) && !(nk > 1 && holds(now, 1))) { markS = `Pierde la mejor marca, que ahora es de <b>${esc(nm(now[0].eq))}</b>.`; score -= 1; }
+    else if (holds(bef, 0) && nk > 1 && holds(now, 1) && !holds(now, 0)) { markS = `Pierde la mejor marca, que se lleva <b>${esc(nm(now[0].eq))}</b>, aunque conserva la 2ª.`; score -= 1; }
+    else if (nk > 1 && holds(bef, 1) && !holds(now, 1) && !holds(now, 0)) { markS = `Se queda sin la 2ª mejor marca, que pasa a <b>${esc(nm(now[1].eq))}</b>.`; score -= 1; }
+  }
+  const verdict = score >= 5 ? pick(["Jornada redonda", "Semana de las que se recuerdan", "Jornada para enmarcar"], "x")
+    : score >= 2 ? pick(["Buena jornada", "Semana positiva", "Jornada con nota"], "x")
+    : score >= -1 ? pick(["Jornada de luces y sombras", "Semana irregular", "Jornada a medias"], "x")
+    : pick(["Jornada para olvidar", "Semana negra", "Jornada aciaga"], "x");
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  let txt = `${verdict} para <b>${name}</b>${partial ? " (jornada aún sin terminar)" : ""}. `;
+  parts.forEach(x => txt += cap(x) + ". ");
+  if (semS) txt += semS + ". ";
+  if (genS) txt += genS + ". ";
+  if (markS) txt += markS;
+  return { txt: txt.trim(), score };
+}
+function cronicaView() {
+  const T = MI_EQUIPO, maxJ = cronicaJ();
+  const def = lastClosed && lastClosed <= maxJ ? lastClosed : maxJ;
+  const key = "cron" + CK, N = state.sel[key] || def;
+  const partial = sg.partial || [];
+  let h = `<div class="chips" id="chipsCron">${Array.from({ length: maxJ }, (_, i) => i + 1).map(j => `<button class="chip${partial.includes(j) ? " pendj" : " closed"}" data-sel="${key}:${j}" aria-selected="${j === N}">J${j}</button>`).join("")}</div>`;
+  if (!maxJ) return h + `<p class="note">Todavía no hay jornadas jugadas.</p>`;
+  const c = cronicaText(T, N);
+  const mood = c.score >= 5 ? "top" : c.score >= 2 ? "good" : c.score >= -1 ? "mid" : "bad";
+  h += `<div class="nhead phead">Jornada ${N}</div><div class="cronica ${mood}"><p>${c.txt}</p></div>`;
+  if (partial.includes(N)) h += `<div class="pendlegend"><span class="pendbox"></span>Jornada sin terminar</div>`;
+  return h;
+}
 const ROUTES = {
   home:      { crumb: "", title: "", render: home },
   premier:   { crumb: "", title: () => C.title, plain: true, render: premier },
@@ -1111,11 +1237,12 @@ const ROUTES = {
   champions: { crumb: "", title: "Champions", render: champView },
   semanal:   { crumb: "", title: "Semanal y General", noHeader: true, render: sgView },
   normas:    { crumb: "", title: "Normas", render: normasView },
+  cronica:   { crumb: "", title: "Mi crónica", render: cronicaView },
   miequipo:  { crumb: "", title: () => nm(MI_EQUIPO), render: () => miEquipoView() },
   otros:     { crumb: "", title: "Otros equipos", render: otrosView },
   otro:      { crumb: "", title: () => nm(OTROS().includes(state.sel.otro) ? state.sel.otro : OTROS()[0]), render: otroView }
 };
-const PARENT = { premier: "home", liga: "premier", champions: "premier", semanal: "premier", normas: "premier", miequipo: "premier", otros: "premier", otro: "otros" };
+const PARENT = { premier: "home", liga: "premier", champions: "premier", semanal: "premier", normas: "premier", cronica: "premier", miequipo: "premier", otros: "premier", otro: "otros" };
 
 /* hueco en blanco dentro de una cinta (p. ej. entre Grupo A y Grupo B): ancho = cinta visible + N segundos de recorrido */
 function fitTickerGaps() {
