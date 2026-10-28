@@ -491,6 +491,9 @@ table.pj tr.me.hl td { background-color: var(--hl-bg); background-image: linear-
 .tbl.sem .row { grid-template-columns: 30px minmax(0,1fr) 110px; }
 .tbl.sem .row .pos { text-align: center; width: 28px; }
 .tbl.sem .row .pts, .tbl.sem .row.head .num { text-align: center; }
+/* importes de los premios del Semanal en verde (claro y oscuro), todas las competiciones (Ricardo 28/10/2026) */
+.tbl.sem .row .pts { color: var(--accent); }
+table.pj.eurj .cell:not(.empty) { color: var(--accent); }
 .tbl.g4 .row { grid-template-columns: 30px minmax(0,1fr) 68px 80px; }
 .tbl.g4 .row .pos { text-align: center; width: 28px; }
 .tbl.g4 .row .pts, .tbl.g4 .row .eur, .tbl.g4 .row.head .num { text-align: center; }
@@ -637,7 +640,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793204290";</script>
+<script>window.MONDO_BUILD = "1793211492";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
