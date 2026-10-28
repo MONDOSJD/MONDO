@@ -623,7 +623,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793183170";</script>
+<script>window.MONDO_BUILD = "1793184334";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1066,6 +1066,8 @@ function miEquipoView(team) {
   }
   h += `<div class="nhead phead" data-nav="semanal|t.sg=gen|${HL}">Puntos por jornada</div><div class="mejpts" data-nav="semanal|t.sg=gen|${HL}">` +
     gt.pts.map((p, i) => p == null ? "" : `<div class="${isBest(p, i + 1, gt.eq) ? "best" + isBest(p, i + 1, gt.eq) : ""}${(sg.partial || []).includes(i + 1) ? " part" : ""}"><small>J${i + 1}</small><b>${p}</b><i>${sem.eur[i] != null ? fmt(sem.eur[i]) + " €" : ""}</i></div>`).join("") + `</div>`;
+  // leyenda naranja bajo Puntos por jornada si alguna jornada mostrada está sin terminar (Ricardo 28/10)
+  if (gt.pts.some((p, i) => p != null && (sg.partial || []).includes(i + 1))) h += `<div class="pendlegend"><span class="pendbox"></span>Jornada sin terminar</div>`;
   h += `</div>`;
   return h;
 }
