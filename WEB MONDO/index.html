@@ -655,7 +655,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793229099";</script>
+<script>window.MONDO_BUILD = "1793229331";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -893,7 +893,7 @@ function premier() {
     ${card("Liga Regular", clasTicker(), "liga")}
     ${champ ? card("Champions", champTicker(), "champions") : ""}
     ${card("Semanal y General", genTicker(), "semanal")}
-    ${card("Mi crónica", `<span class="me-sub">Tu jornada contada</span>`, "cronica")}
+    ${card("La crónica", `<span class="me-sub">Tu jornada contada</span>`, "cronica")}
     ${card("Normas", "", "normas")}
   </div></div>`;
 }
@@ -1245,7 +1245,7 @@ const ROUTES = {
   champions: { crumb: "", title: "Champions", render: champView },
   semanal:   { crumb: "", title: "Semanal y General", noHeader: true, render: sgView },
   normas:    { crumb: "", title: "Normas", render: normasView },
-  cronica:   { crumb: "", title: "Mi crónica", render: cronicaView },
+  cronica:   { crumb: "", title: "La crónica", render: cronicaView },
   miequipo:  { crumb: "", title: () => nm(MI_EQUIPO), render: () => miEquipoView() },
   otros:     { crumb: "", title: "Otros equipos", render: otrosView },
   otro:      { crumb: "", title: () => nm(OTROS().includes(state.sel.otro) ? state.sel.otro : OTROS()[0]), render: otroView }
