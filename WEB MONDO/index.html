@@ -250,6 +250,14 @@ table.pj td.part:not(.best1):not(.best2) { background: #FFC000; color: #3A2A00; 
 .frame { background: #FFD43B; border: 2px solid #E0B300; border-radius: 22px; padding: 14px 14px 16px; margin-top: 16px; box-shadow: 0 6px 18px rgba(120, 90, 0, .18); }
 .frame .hero { padding: 0 0 16px; }
 .frame .stack { padding-top: 0; }
+/* tarjetas del hub ~15% más bajas para que quepan en el móvil con Mi crónica (Ricardo 29/10) */
+.frame .stack { gap: 8px; }
+.frame .stack .card { padding: 10px 14px; min-height: 71px; }
+.frame .stack .card.half { padding: 8px 10px 8px 14px; min-height: 71px; }
+.frame .stack .card .ticker { margin-top: 5px; }
+.frame .stack .card .me-sub { margin-top: 4px; }
+.frame .stack .card.half .t { font-size: 20px; }
+.frame .stack .card.half .go { margin: 0; }
 .frame .word { color: #16231D; }
 .frame .word span { color: #1E7A4C; }
 .frame .tile.off { background: rgba(255, 255, 255, .45); border-color: rgba(90, 70, 0, .35); color: #4A4220; }
@@ -647,7 +655,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793221349";</script>
+<script>window.MONDO_BUILD = "1793229099";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
