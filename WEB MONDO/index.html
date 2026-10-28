@@ -608,6 +608,9 @@ ol.normas .nk { display: grid; place-items: center; min-width: 30px; height: 26p
 .potbl.fin .x small { position: absolute; left: 0; bottom: 100%; margin: 0 0 3px; white-space: nowrap; }
 .prizebox { margin: 16px 0 0; display: inline-grid; gap: 6px; padding: 12px 18px; border-radius: 10px; background: #4DF04D; color: #0A1F0A; font: 700 17px/1.1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 2px 8px rgba(30,140,30,.25); }
 .prizebox div { display: grid; grid-template-columns: 34px auto; }
+.sgfoot { display: flex; flex-wrap: nowrap; align-items: center; gap: 14px; }
+.sgfoot .pendlegend { margin: 16px 0 0; max-width: none; flex: 1 1 auto; min-width: 0; }
+.sgfoot .pendlegend .pendbox, .sgfoot .prizebox { flex: none; }
 .note { color: var(--ink2); font-size: 13px; margin: 14px 0 0; }
 .foot { margin-top: 28px; color: var(--ink2); font-size: 13px; }
 details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-top: 14px; }
@@ -634,7 +637,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793203218";</script>
+<script>window.MONDO_BUILD = "1793204290";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -980,7 +983,8 @@ function sgView() {
       rows.map((t,i) => `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos">${i+1}</span><span class="nm">${esc(nm(t.eq))}</span><span class="pts">${eur2(t.total)}</span></div>`).join("") + `</div>`;
     h += `<div class="sec">Euros por jornada</div><div class="scroll"><table class="pj eurj"><thead><tr><th>Equipo</th>${Array.from({length:nj},(_,i)=>th(i)).join("")}</tr></thead><tbody>` +
       rows.map(t => `<tr class="${isHl(t.eq)?"me hl":MINE===t.eq?"me":""}" data-tm="${esc(canon(t.eq))}"><td>${esc(nm(t.eq))}</td>${t.eur.map((p,i) => `<td style="--i:${i+1}"><span class="cell${p == null ? " empty" : ""}">${p == null ? "" : (Math.round(p*100)/100).toFixed(2).replace(".", ",")}</span></td>`).join("")}</tr>`).join("") + `</tbody></table></div>`;
-    h += `<div class="prizebox">${sg.premiosSemanal.map(x => { const m = String(x).trim().match(/^(\S+)\s+(.*)$/); return `<div><b>${esc(m ? m[1] : x)}</b><span>${esc(m ? m[2] : "")}</span></div>`; }).join("")}</div>
+    // cuadro verde de premios y, al lado, el aviso naranja de jornada sin terminar (Ricardo 28/10)
+    h += `<div class="sgfoot"><div class="prizebox">${sg.premiosSemanal.map(x => { const m = String(x).trim().match(/^(\S+)\s+(.*)$/); return `<div><b>${esc(m ? m[1] : x)}</b><span>${esc(m ? m[2] : "")}</span></div>`; }).join("")}</div>${partial.length ? `<div class="pendlegend"><span class="pendbox"></span>Jornada sin terminar</div>` : ""}</div>
       <p class="note">${NORMAS_SG_TIE}</p>`;
   }
   return h;
