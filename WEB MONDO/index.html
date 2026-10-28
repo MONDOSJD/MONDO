@@ -615,6 +615,15 @@ summary { font-weight: 600; cursor: pointer; min-height: 24px; }
 details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) { .view { animation: in .18s ease-out; } @keyframes in { from { opacity: .0; transform: translateY(6px);} to { opacity: 1; transform: none; } } }
+/* MODO OSCURO: paneles de partidos y de clasificaciones en GRIS para que no se vea todo negro (Ricardo 28/10). Modo claro sin tocar. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .match:not(.hl), :root:not([data-theme="light"]) .tbl { background: #2E3532; border-color: #4A5450; }
+  :root:not([data-theme="light"]) .tbl .row { border-top-color: #444E4A; }
+  :root:not([data-theme="light"]) .tm.l { color: #A3ADA7; }
+}
+:root[data-theme="dark"] .match:not(.hl), :root[data-theme="dark"] .tbl { background: #2E3532; border-color: #4A5450; }
+:root[data-theme="dark"] .tbl .row { border-top-color: #444E4A; }
+:root[data-theme="dark"] .tm.l { color: #A3ADA7; }
 </style>
 
 <div class="wrap">
@@ -625,7 +634,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793185320";</script>
+<script>window.MONDO_BUILD = "1793189922";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
