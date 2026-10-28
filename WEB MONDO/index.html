@@ -163,6 +163,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .mepage .megrid.c3 .mebox .big b:not(.money) { min-width: 31px; height: 31px; font-size: 19px; border-radius: 8px; padding: 0 4px; }
 .mepage .megrid.c3 .mebox .big span { font-size: 25px; }
 .mepage .megrid.c3 .mebox .big span small { font-size: 12px; }
+/* los puntos centrados a la altura del cuadro del puesto, no arriba (Ricardo 28/10) */
+.mepage .megrid.c3 .mebox .big { align-items: center; }
+.mepage .megrid.c3 .mebox .big span { line-height: 1; white-space: nowrap; }
 
 @media (prefers-reduced-motion: reduce) { .back, .go, .back::before, .go::before, .back::after, .go::after { animation: none; } }
 /* teclas de volver y entrar como un PULSADOR ARCADE ILUMINADO (Ricardo 20/10/2026, foto de referencia: botón LED verde menta con cúpula brillante y aro negro grueso). Antes: amarillas, luego verde mosca, luego turquesa */
@@ -617,7 +620,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793109192";</script>
+<script>window.MONDO_BUILD = "1793168150";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
