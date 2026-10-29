@@ -657,7 +657,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793294231";</script>
+<script>window.MONDO_BUILD = "1793307116";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1305,7 +1305,7 @@ function cronicaText(T, N) {
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const words = list => (head + " " + list.map(x => x.t).join(" ")).replace(/<[^>]+>/g, "").split(/\s+/).filter(Boolean).length;
   let keep = S.slice();
-  while (words(keep) > 100 && keep.length) { const lo = keep.reduce((m, x) => x.pr < m.pr ? x : m, keep[0]); keep = keep.filter(x => x !== lo); }
+  while (words(keep) > 125 && keep.length) /* máximo 125 palabras (Ricardo 30/10) */ { const lo = keep.reduce((m, x) => x.pr < m.pr ? x : m, keep[0]); keep = keep.filter(x => x !== lo); }
   const sent = x => { const t = cap(x.t); return /[.!?]$/.test(t) ? t : t + "."; };
   const paras = (partial ? ["Jornada aún sin terminar: los datos son provisionales."] : []).concat(["s", "g", "l", "c"].map(g => /* orden (Ricardo 29/10): semana, General, Liga Regular, Champions */ keep.filter(x => x.g === g).map(sent).join(" ")).filter(Boolean));
   const txt = paras.join("</p><p>");
