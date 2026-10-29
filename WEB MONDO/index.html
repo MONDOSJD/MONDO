@@ -657,7 +657,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793280467";</script>
+<script>window.MONDO_BUILD = "1793285253";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1130,6 +1130,43 @@ function marksUpTo(n) {
   all.sort((a, b) => b.p - a.p || a.j - b.j);
   return all;
 }
+/* clasificación de Liga Regular o de un grupo de Champions tal como estaba tras la jornada n, con los desempates de las Normas
+   (puntos; empatados: victorias entre ellos, diferencia entre ellos, diferencia total, puntos a favor; validado contra los Excel) (Ricardo 29/10) */
+function standAt(teams, games, win, extra) {
+  const G = games.filter(m => m[2] != null && m[3] != null).map(m => [canon(m[0]), canon(m[1]), m[2], m[3]]);
+  const pts = {}; teams.forEach(t => pts[t] = 0);
+  G.forEach(([a, b, x, y]) => { if (x > y) pts[a] += win; else if (x < y) pts[b] += win; else if (win === 3) { pts[a] += 1; pts[b] += 1; } });
+  (extra || []).forEach(([t, v]) => { if (t in pts) pts[t] += v; });
+  const val = (t, grp, st) => G.reduce((s, [a, b, x, y]) => {
+    if (a !== t && b !== t) return s; const me = a === t ? x : y, op = a === t ? y : x, inG = grp.includes(a) && grp.includes(b);
+    if (st === 0) return inG ? s + (me > op ? win : me === op && win === 3 ? 1 : 0) : s;
+    if (st === 1) return inG ? s + me - op : s;
+    if (st === 2) return s + me - op;
+    return s + me;
+  }, 0);
+  const order = (grp, st) => {
+    if (grp.length <= 1 || st > 3) return grp.slice().sort();
+    const v = {}; grp.forEach(t => v[t] = val(t, grp, st));
+    return [...new Set(Object.values(v))].sort((x, y) => y - x).flatMap(k => { const sub = grp.filter(t => v[t] === k); return sub.length < grp.length ? order(sub, 0) : order(grp, st + 1); });
+  };
+  return [...new Set(Object.values(pts))].sort((x, y) => y - x).flatMap(p => order(teams.filter(t => pts[t] === p), 0));
+}
+function ligaPosAt(T, n) {
+  if (n < 1) return null;
+  if (n === lastLiga) { const i = liga.tabla.findIndex(t => canon(t.eq) === T); return i >= 0 ? i + 1 : null; }
+  const js = liga.jornadas.filter(j => j.num <= n), extra = [];
+  if (C.basket) js.forEach(j => { if (hasRes(j.sets.flat())) (j.rest || []).forEach((r, i) => { if (r && j.restVal && j.restVal[i] != null) extra.push([canon(r), j.restVal[i]]); }); });
+  const r = standAt(liga.tabla.map(t => canon(t.eq)), js.flatMap(j => j.sets.flat()), C.basket ? 1 : 3, extra), i = r.indexOf(T);
+  return i >= 0 ? i + 1 : null;
+}
+function champPosAt(T, g, n) {
+  if (n === lastChamp) { const i = champ[g].clas.findIndex(t => canon(t.eq) === T); return i >= 0 ? i + 1 : null; }
+  const js = champ[g].jornadas.filter(j => j.num <= n); if (!js.some(j => hasRes(j.m))) return null;
+  const r = standAt(champ[g].clas.map(t => canon(t.eq)), js.flatMap(j => j.m), 3), i = r.indexOf(T);
+  return i >= 0 ? i + 1 : null;
+}
+/* frase de puesto: "eres 5º", "subes al 3º", "bajas al 7º", "sigues 5º" */
+const posTxt = (now, bef) => { const Bn = `<b>${ORD(now)}</b>`; return !bef || bef === now ? (bef ? `sigues ${Bn}` : `eres ${Bn}`) : now < bef ? `subes del ${ORD(bef)} al ${Bn}` : `bajas del ${ORD(bef)} al ${Bn}`; };
 function genRank(n, T) { /* puesto en la General con lo sumado hasta la jornada n (empates: mismo puesto) */
   const tot = sg.general.map(t => ({ eq: canon(t.eq), s: t.pts.slice(0, n).reduce((a, p) => a + (p || 0), 0) }));
   const me = tot.find(x => x.eq === T); if (!me) return null;
@@ -1177,8 +1214,8 @@ function cronicaText(T, N) {
     /* racha: resultados seguidos iguales hasta esta jornada */
     const seq = lmAll.filter(x => !x.rest && x.played && !x.pend && x.j <= N).map(x => x.r);
     let k = 0; const last = seq[seq.length - 1]; for (let i = seq.length - 1; i >= 0 && seq[i] === last; i--) k++;
-    if (lm.some(x => !x.rest && x.played && !x.pend) && k >= 3 && last !== "e") s += last === "v" ? ` y ya encadenas ${B(k + " victorias")} seguidas` : ` y acumulas ${B(k + " derrotas")} consecutivas`;
-    if (N === lastLiga) { const li = liga.tabla.findIndex(t => canon(t.eq) === T); if (li >= 0) s += `; eres ${B(ORD(li + 1))} en la clasificación${li < C.ligaPrize ? ", en zona de premios" : ""}`; }
+    if (lm.some(x => !x.rest && x.played && !x.pend) && k >= 3 && last !== "e") s += last === "v" ? `, y ya encadenas ${B(k + " victorias")} seguidas` : `, y acumulas ${B(k + " derrotas")} consecutivas`;
+    { const lp = ligaPosAt(T, N), lb = ligaPosAt(T, N - 1); if (lp) s += `; ${posTxt(lp, lb)} en la clasificación${lp <= C.ligaPrize ? ", en zona de premios" : ""}`; }
     say(s, 9);
   }
   /* champions */
@@ -1191,7 +1228,7 @@ function cronicaText(T, N) {
         if (x.rest) { if (x.played) say(`En Champions descansaste`, 4); return; }
         let t = x.pend ? `tu partido contra ${NM(x.op)} sigue sin terminar` : x.played ? mtxt(x, "ch") : ""; if (!t) return; t = "En Champions " + t;
         if (x.played && !x.pend) { score += x.r === "v" ? 1 : x.r === "d" ? -1 : 0; if (x.r === "v") W++; else if (x.r === "d") L++; else Dr++; }
-        if (N === lastChamp) { const ci = champ[g].clas.findIndex(t => canon(t.eq) === T); if (ci >= 0) t += `; eres ${B(ORD(ci + 1))} del grupo ${g}${ci < C.champ.pass ? ", en puestos de clasificación" : ", fuera de los puestos de clasificación"}`; }
+        { const cp = champPosAt(T, g, N), cb = champPosAt(T, g, N - 1); if (cp) t += `; ${posTxt(cp, cb)} del grupo ${g}${cp <= C.champ.pass ? ", en puestos de clasificación" : ", fuera de los puestos de clasificación"}`; }
         say(t, 8);
       });
     }
