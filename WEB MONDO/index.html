@@ -657,7 +657,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793273015";</script>
+<script>window.MONDO_BUILD = "1793274418";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1225,7 +1225,7 @@ function cronicaText(T, N) {
     g += `, con ${a.s} puntos`;
     const tot = sg.general.map(t => ({ eq: canon(t.eq), s: t.pts.slice(0, N).reduce((x, v) => x + (v || 0), 0) })).sort((x, y) => y.s - x.s);
     if (a.pos === 1 && tot[1]) g += tot[1].s < a.s ? ` y ${B((a.s - tot[1].s) + " puntos de ventaja")} sobre el segundo` : "";
-    else { const up = tot.filter(x => x.s > a.s).pop(); if (up) g += `, a ${B(up.s - a.s)} del puesto de arriba`; }
+    else { const up = tot.filter(x => x.s > a.s).pop(); if (up) g += `, a ${B(up.s - a.s)} del siguiente puesto mejor`; }
     g += a.pos <= C.genPrize ? ", dentro de los premios" : "";
     say(g, 6);
   }
