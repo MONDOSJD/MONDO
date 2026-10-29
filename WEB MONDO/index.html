@@ -657,7 +657,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793277251";</script>
+<script>window.MONDO_BUILD = "1793280467";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1201,8 +1201,10 @@ function cronicaText(T, N) {
   if (p != null) {
     const rows = sg.general.map(t => ({ eq: canon(t.eq), v: t.pts[N - 1] })).filter(r => r.v != null), n = rows.length, rk = 1 + rows.filter(r => r.v > p).length;
     semLow = rk > n - Math.ceil(n / 3); score += rk <= Math.ceil(n / 3) ? 1 : semLow ? -1 : 0;
-    const top = rk === 1 ? `la mejor puntuación de la semana` : rk === n ? `la peor de la semana` : `la ${rk}ª mejor de los ${n}`;
-    say(`${partial ? "Llevas" : "Firmaste"} ${B(p + " puntos")}, ${top}` + (eur > 0 ? `, y te embolsas ${B(eur2(eur))} de premio semanal` : partial ? "" : ", sin premio semanal"), 7);
+    /* empieza por la semana (Ricardo 29/10): "Esta jornada has hecho X puntos…", puesto en la semanal y premio */
+    if (partial) say(`Esta jornada llevas ${B(p + " puntos")} y vas ${B(ORD(rk))} de ${n} en la semanal`, 7);
+    else say(`Esta jornada has hecho ${B(p + " puntos")}` + (rk === 1 ? ` y has sido ${B("el mejor de la semana")}` : ` y has quedado ${B(ORD(rk))} de ${n} en la semanal`) +
+      (eur > 0 ? `; te llevas ${B(eur2(eur))} de premio semanal` : `, sin premio semanal`), 7);
     if (eur > 0) score += 1;
     /* centrado en el propio equipo (Ricardo 29/10): nada de lo que hicieron los demás; sí su mejor/peor jornada de la temporada */
     const own = gt.pts.slice(0, N).filter((v, i) => v != null && !(sg.partial || []).includes(i + 1));
@@ -1268,7 +1270,7 @@ function cronicaText(T, N) {
   let keep = S.slice();
   while (words(keep) > 100 && keep.length) { const lo = keep.reduce((m, x) => x.pr < m.pr ? x : m, keep[0]); keep = keep.filter(x => x !== lo); }
   const sent = x => { const t = cap(x.t); return /[.!?]$/.test(t) ? t : t + "."; };
-  const paras = (partial ? ["Jornada aún sin terminar: los datos son provisionales."] : []).concat(["l", "c", "s", "g"].map(g => keep.filter(x => x.g === g).map(sent).join(" ")).filter(Boolean));
+  const paras = (partial ? ["Jornada aún sin terminar: los datos son provisionales."] : []).concat(["s", "g", "l", "c"].map(g => /* orden (Ricardo 29/10): semana, General, Liga Regular, Champions */ keep.filter(x => x.g === g).map(sent).join(" ")).filter(Boolean));
   const txt = paras.join("</p><p>");
   return { txt, head, score, level };
 }
