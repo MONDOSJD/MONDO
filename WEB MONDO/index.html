@@ -625,7 +625,7 @@ ol.normas .nk { display: grid; place-items: center; min-width: 30px; height: 26p
 .cronica p b { font-weight: 700; }
 .cronica p + p { margin-top: 10px; }
 .cronica .ctit { margin: 0 0 12px; font: 800 26px/1.1 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); }
-.cronica.top { border-left-color: #39FF6A; } .cronica.good { border-left-color: #1E7A4C; } .cronica.mid { border-left-color: #FFC000; } .cronica.bad { border-left-color: #D90429; }
+.cronica.cr-top { border-left-color: #39FF6A; } .cronica.cr-good { border-left-color: #1E7A4C; } .cronica.cr-mid { border-left-color: #FFC000; } .cronica.cr-bad { border-left-color: #D90429; } /* clases cr-…: "top" chocaba con la cabecera .top y ponía la crónica en horizontal (29/10) */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cronica { background: #2E3532; border-top-color: #4A5450; border-right-color: #4A5450; border-bottom-color: #4A5450; } }
 :root[data-theme="dark"] .cronica { background: #2E3532; border-top-color: #4A5450; border-right-color: #4A5450; border-bottom-color: #4A5450; }
 .sgfoot { display: flex; flex-wrap: nowrap; align-items: center; gap: 14px; }
@@ -657,7 +657,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793274788";</script>
+<script>window.MONDO_BUILD = "1793276407";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1280,7 +1280,7 @@ function cronicaView() {
   let h = `<div class="chips" id="chipsCron">${Array.from({ length: maxJ }, (_, i) => i + 1).map(j => `<button class="chip${partial.includes(j) ? " pendj" : " closed"}" data-sel="${key}:${j}" aria-selected="${j === N}">J${j}</button>`).join("")}</div>`;
   if (!maxJ) return h + `<p class="note">Todavía no hay jornadas jugadas.</p>`;
   const c = cronicaText(T, N);
-  const mood = c.level === 5 ? "top" : c.level >= 3 ? "good" : c.level >= 1 ? "mid" : "bad";
+  const mood = c.level === 5 ? "cr-top" : c.level >= 3 ? "cr-good" : c.level >= 1 ? "cr-mid" : "cr-bad";
   h += `<div class="nhead phead">Jornada ${N}</div><div class="cronica ${mood}"><h3 class="ctit">${c.head}</h3><p>${c.txt}</p></div>`;
   if (partial.includes(N)) h += `<div class="pendlegend"><span class="pendbox"></span>Jornada sin terminar</div>`;
   return h;
