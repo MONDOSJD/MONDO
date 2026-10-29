@@ -655,7 +655,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793258778";</script>
+<script>window.MONDO_BUILD = "1793268895";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1241,7 +1241,7 @@ function cronicaText(T, N) {
   const nextJ = lmAll.find(x => x.j > N && !x.rest), nextTxt = nextJ ? ` ante ${NM(nextJ.op)}` : "";
   const close = [pick([`Toca levantarse${nextTxt} en la próxima jornada`, `Necesita reaccionar cuanto antes${nextTxt}`], "c"), pick([`Habrá que afinar más${nextTxt} en la próxima`, `La próxima jornada${nextTxt} dirá hacia dónde se inclina`], "c"),
     pick([`Buen paso adelante; la próxima jornada${nextTxt}, a confirmarlo`, `Va por buen camino; ahora toca seguir${nextTxt}`], "c"), pick([`Semana para sacar pecho; la próxima${nextTxt}, a seguir la racha`, `Está lanzado; la próxima jornada${nextTxt}, a mantener el nivel`], "c")][mood];
-  if (!partial) say(close, 1);
+  /* sin frase de cierre sobre la próxima jornada (Ricardo 29/10) */
   const head = `${verdict} para ${B(name)}${partial ? " (jornada aún sin terminar)" : ""}`;
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const words = list => (head + " " + list.map(x => x.t).join(" ")).replace(/<[^>]+>/g, "").split(/\s+/).filter(Boolean).length;
