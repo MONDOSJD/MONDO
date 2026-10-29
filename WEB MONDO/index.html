@@ -657,7 +657,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793274468";</script>
+<script>window.MONDO_BUILD = "1793274788";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1226,8 +1226,13 @@ function cronicaText(T, N) {
     const tot = sg.general.map(t => ({ eq: canon(t.eq), s: t.pts.slice(0, N).reduce((x, v) => x + (v || 0), 0) })).sort((x, y) => y.s - x.s);
     if (a.pos === 1 && tot[1]) g += tot[1].s < a.s ? ` y ${B((a.s - tot[1].s) + " puntos de ventaja")} sobre el segundo` : "";
     else { const up = tot.filter(x => x.s > a.s).pop(); if (up) g += ` y queda a ${B(up.s - a.s)} del siguiente`; }
-    g += a.pos <= C.genPrize ? ", dentro de los premios" : "";
     say(g, 6);
+    /* premios de la General: sigue / entra / sale (Ricardo 29/10) */
+    const inA = a.pos <= C.genPrize, inB = b ? b.pos <= C.genPrize : null;
+    if (inA && inB) say(pick(["Sigue en puestos de premios", "Continúa en puestos de premios"], "pz"), 6);
+    else if (inA && inB === false) say(pick(["Entra en puestos de premios", "Se mete en puestos de premios"], "pz"), 6);
+    else if (inA && inB === null) say("Arranca en puestos de premios", 6);
+    else if (!inA && inB) say(pick(["Sale de los puestos de premios", "Se cae de los puestos de premios"], "pz"), 6);
   }
   /* mejores marcas */
   grp = "s";
