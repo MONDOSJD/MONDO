@@ -623,6 +623,7 @@ ol.normas .nk { display: grid; place-items: center; min-width: 30px; height: 26p
 .cronica { margin: 0 0 12px; padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid #9AA39C; }
 .cronica p { margin: 0; font: 500 17px/1.5 var(--font-body); color: var(--ink); }
 .cronica p b { font-weight: 700; }
+.cronica p + p { margin-top: 10px; }
 .cronica.top { border-left-color: #39FF6A; } .cronica.good { border-left-color: #1E7A4C; } .cronica.mid { border-left-color: #FFC000; } .cronica.bad { border-left-color: #D90429; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cronica { background: #2E3532; border-top-color: #4A5450; border-right-color: #4A5450; border-bottom-color: #4A5450; } }
 :root[data-theme="dark"] .cronica { background: #2E3532; border-top-color: #4A5450; border-right-color: #4A5450; border-bottom-color: #4A5450; }
@@ -655,7 +656,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793269727";</script>
+<script>window.MONDO_BUILD = "1793270885";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1145,7 +1146,8 @@ function cronicaText(T, N) {
   const gt = sg.general.find(t => canon(t.eq) === T) || { pts: [] }, sem = sg.semanal.find(t => canon(t.eq) === T) || { eur: [] };
   const p = gt.pts[N - 1], eur = sem.eur[N - 1] || 0;
   let score = 0, W = 0, L = 0, Dr = 0, gMove = 0, semLow = false, markWon = false; const S = []; /* {t: texto, pr: prioridad (más alto = más importante)} */
-  const say = (t, pr) => { if (t) S.push({ t, pr }); };
+  let grp = "l"; /* párrafo: l liga, c champions, s semana (y marcas), g general — punto y aparte entre ellos (Ricardo 29/10) */
+  const say = (t, pr) => { if (t) S.push({ t, pr, g: grp }); };
   /* cómo se cuenta un partido según la diferencia */
   const usedV = []; /* no repetir el mismo verbo en Liga y Champions */
   const pickV = (arr, salt) => { const st = arr.indexOf(pick(arr, salt)); for (let k = 0; k < arr.length; k++) { const c = arr[(st + k) % arr.length], v = c.split("<b>")[0]; if (!usedV.includes(v)) { usedV.push(v); return c; } } return arr[st]; };
@@ -1179,6 +1181,7 @@ function cronicaText(T, N) {
     say(s, 9);
   }
   /* champions */
+  grp = "c";
   if (champ) {
     const g = ["A", "B"].find(k => champ[k].clas.some(t => canon(t.eq) === T));
     if (g) {
@@ -1192,6 +1195,7 @@ function cronicaText(T, N) {
       });
     }
   }
+  grp = "s";
   /* la semana: puntos, puesto entre todos, premio, comparación con su media y con el mejor */
   if (p != null) {
     const rows = sg.general.map(t => ({ eq: canon(t.eq), v: t.pts[N - 1] })).filter(r => r.v != null), n = rows.length, rk = 1 + rows.filter(r => r.v > p).length;
@@ -1208,6 +1212,7 @@ function cronicaText(T, N) {
       if (Math.abs(d) >= 8) say(d > 0 ? pick([`Muy por encima de su media de la temporada (${avg})`, `Una puntuación que mejora con creces su media (${avg})`], "avg") : pick([`Lejos de su media de la temporada (${avg})`, `Por debajo de lo que acostumbra: su media es de ${avg}`], "avg"), 3);
     }
   }
+  grp = "g";
   /* general: sube/baja, distancia con el de arriba o ventaja sobre el segundo, zona de premios */
   const a = genRank(N, T), b = N > 1 ? genRank(N - 1, T) : null;
   if (a) {
@@ -1224,6 +1229,7 @@ function cronicaText(T, N) {
     say(g, 6);
   }
   /* mejores marcas */
+  grp = "s";
   if (!partial) {
     const now = marksUpTo(N), bef = marksUpTo(N - 1);
     const holds = (L, k) => L[k] && L[k].eq === T, mine = (L, k) => holds(L, k) && L[k].j === N;
@@ -1255,7 +1261,9 @@ function cronicaText(T, N) {
   const words = list => (head + " " + list.map(x => x.t).join(" ")).replace(/<[^>]+>/g, "").split(/\s+/).filter(Boolean).length;
   let keep = S.slice();
   while (words(keep) > 100 && keep.length) { const lo = keep.reduce((m, x) => x.pr < m.pr ? x : m, keep[0]); keep = keep.filter(x => x !== lo); }
-  const txt = head + ". " + keep.map(x => { const t = cap(x.t); return /[.!?]$/.test(t) ? t : t + "."; }).join(" ");
+  const sent = x => { const t = cap(x.t); return /[.!?]$/.test(t) ? t : t + "."; };
+  const paras = [head + "."].concat(["l", "c", "s", "g"].map(g => keep.filter(x => x.g === g).map(sent).join(" ")).filter(Boolean));
+  const txt = paras.join("</p><p>");
   return { txt, score, level };
 }
 function cronicaView() {
