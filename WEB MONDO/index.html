@@ -570,6 +570,8 @@ table.pj.eurj th:not(:first-child), table.pj.eurj td:not(:first-child) { text-al
 table.pj.eurj .cell { display: inline-block; min-width: 46px; padding: 6px 6px; border-radius: 8px; background: var(--accent-soft); color: var(--ink); font-weight: 600; line-height: 1.1; }
 table.pj.eurj .cell.empty { background: var(--surface2); opacity: .55; min-height: 27px; vertical-align: middle; }
 td.best1 { background: #00FF00 !important; color: #0B1F12; font-weight: 800; }
+@keyframes markFlash { 0%, 100% { box-shadow: inset 0 0 0 0 rgba(0,0,0,0); } 25%, 75% { box-shadow: inset 0 0 0 3px #0B0F0D; } 50% { box-shadow: inset 0 0 0 3px #FFFFFF; } }
+table.pj td.markflash { animation: markFlash 1.2s ease-in-out 2; }
 td.best2 { background: #8ED8F8 !important; color: #0B1F12; font-weight: 700; }
 /* puntos por jornada: número centrado en su casilla, así la ventana verde/azul de la mejor marca queda centrada con el número (Ricardo 21/10) */
 table.pj th:not(:first-child), table.pj td:not(:first-child) { text-align: center; }
@@ -658,7 +660,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 15.5px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793367634";</script>
+<script>window.MONDO_BUILD = "1793381581";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1076,7 +1078,7 @@ function miEquipoView(team) {
   const hasMark = k => gt.pts.some((p, i) => isBest(p, i + 1, gt.eq) === k);
   const marks = C.marks.reduce((s, eur, k) => s + (hasMark(k + 1) ? eur : 0), 0);
   /* mejor marca y 2ª mejor marca: casilla verde con el premio si la tiene; roja con 0 si no */
-  const markBox = (lb, k, eur) => `<div class="mebox" data-nav="semanal|t.sg=gen|${HL}"><span class="lb">${lb}</span><span class="big">${hasMark(k) ? `<b class="money prize">${eur2(eur)}</b>` : `<b class="money noprize">${eur2(0)}</b>`}</span></div>`;
+  const markBox = (lb, k, eur) => `<div class="mebox" data-nav="semanal|t.sg=gen|${HL}|sc=best${k}"><span class="lb">${lb}</span><span class="big">${hasMark(k) ? `<b class="money prize">${eur2(eur)}</b>` : `<b class="money noprize">${eur2(0)}</b>`}</span></div>`;
   const box = (lb, pos, prize, val, unit, nav) => `<div class="mebox" data-nav="${nav}|${HL}"><span class="lb">${lb}</span><span class="big"><b class="${prize ? "prize" : "noprize"}">${pos}º</b><span>${val}<small>${unit}</small></span></span></div>`;
   const semBox = `<div class="mebox" data-nav="semanal|t.sg=sem|${HL}"><span class="lb">Semanal</span><span class="big"><b class="money ${sem.total > 0 ? "prize" : "noprize"}">${eur2(sem.total)}</b></span></div>`;
   const total = sem.total + marks + ligaEur + genEur;
@@ -1394,9 +1396,18 @@ function openTeam(t) {
 /* data-nav="ruta|t.pestaña=valor|s.jornada=n|hl=equipo": desde la ficha a la clasificación o jornada, resaltando el equipo */
 function navTo(spec) {
   if (!spec) return;
-  const [route, ...parts] = spec.split("|");
+  const [route, ...parts] = spec.split("|"); let sc = "";
   go(route, true, () => parts.forEach(p => { const i = p.indexOf("="), k = p.slice(0, i), v = p.slice(i + 1);
-    if (k.startsWith("t.")) state.tab[k.slice(2)] = v; else if (k.startsWith("s.")) state.sel[k.slice(2)] = +v; else if (k === "hl") state.hl = v; }));
+    if (k.startsWith("t.")) state.tab[k.slice(2)] = v; else if (k.startsWith("s.")) state.sel[k.slice(2)] = +v; else if (k === "hl") state.hl = v; else if (k === "sc") sc = v; }));
+  if (sc) setTimeout(() => scrollToMark(sc), 80);
+}
+/* desde las cajas "1ª / 2ª mejor marca" (Mi equipo / Otros equipos): ir directo a la casilla de esa marca en Puntos por jornada, centrada y con un destello (Ricardo 30/10) */
+function scrollToMark(cls) {
+  const el = document.querySelector(`table.pj td.${cls}`); if (!el) return;
+  const box = el.closest(".scroll"), first = el.parentElement.firstElementChild;
+  if (box) box.scrollLeft = Math.max(0, el.offsetLeft - (first ? first.offsetWidth : 0) - (box.clientWidth - (first ? first.offsetWidth : 0)) / 2 + el.offsetWidth / 2);
+  const r = el.getBoundingClientRect(); window.scrollTo({ top: window.scrollY + r.top - window.innerHeight / 2 + r.height / 2, behavior: "smooth" });
+  el.classList.remove("markflash"); void el.offsetWidth; el.classList.add("markflash");
 }
 
 document.addEventListener("click", e => {
