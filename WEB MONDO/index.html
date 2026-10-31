@@ -509,6 +509,7 @@ table.pj tr.me.hl td { background-color: var(--hl-bg); background-image: linear-
 .tbl.sem .row .pts { color: var(--accent); }
 table.pj.eurj .cell:not(.empty) { color: var(--accent); }
 .tbl.g4 .row { grid-template-columns: 30px minmax(0,1fr) 68px 80px; }
+.tbl.g4.jor .row { grid-template-columns: 30px minmax(0,1fr) 50px 74px; }
 .tbl.g4 .row .pos { text-align: center; width: 28px; }
 .tbl.g4 .row .pts, .tbl.g4 .row .eur, .tbl.g4 .row.head .num { text-align: center; }
 .tbl.champ .row { grid-template-columns: 30px minmax(0,1fr) 80px; }
@@ -665,7 +666,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 15.5px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793451315";</script>
+<script>window.MONDO_BUILD = "1793474430";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -995,11 +996,20 @@ function champView() {
 }
 
 function sgView() {
-  const cur = state.tab.sg || "gen";
-  let h = `<div class="segrow"><button class="back" data-back aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${seg("sg", [["gen","General"],["sem","Semanal"]])}</div>`;
+  /* pestañas (Ricardo 31/10): Jornada (clasificación de la última jornada cerrada) · General · Premios (antes "Semanal") */
+  const cur = state.tab.sg || "jor";
+  let h = `<div class="segrow"><button class="back" data-back aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${seg("sg", [["jor","Jornada"],["gen","General"],["sem","Premios"]])}</div>`;
   const nj = sg.nj, partial = sg.partial || [];
   const th = i => `<th${partial.includes(i+1) ? ' class="part"' : ""}>J${i+1}</th>`;
-  if (cur === "gen") {
+  if (cur === "jor") {
+    let J = 0; for (let j = nj; j >= 1 && !J; j--) if (!partial.includes(j) && sg.general.some(t => t.pts[j - 1] != null)) J = j;
+    if (!J) return h + `<p class="note">Todavía no hay jornadas cerradas.</p>`;
+    const gtot = eq => (sg.general.find(g => g.eq === eq) || { total: 0 }).total;
+    const eurOf = eq => ((sg.semanal.find(s => canon(s.eq) === canon(eq)) || { eur: [] }).eur[J - 1]) || 0;
+    const rows = sg.general.filter(t => t.pts[J - 1] != null).slice().sort((a, b) => b.pts[J - 1] - a.pts[J - 1] || gtot(b.eq) - gtot(a.eq));
+    h += `<div class="sec">Jornada ${J} · clasificación</div><div class="tbl g4 jor"><div class="row head"><span></span><span>Equipo</span><span class="num">Pts</span><span class="num">Premio</span></div>` +
+      rows.map((t, i) => { const e = eurOf(t.eq); return `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos${e > 0 ? " prize" : ""}">${i + 1}</span><span class="nm">${esc(nm(t.eq))}</span><span class="pts">${t.pts[J - 1]}</span><span class="eur">${e > 0 ? eur2(e) : ""}</span></div>`; }).join("") + `</div>`;
+  } else if (cur === "gen") {
     const rows = sg.general.slice().sort((a,b)=>b.total-a.total);
     h += `<div class="tbl g4"><div class="row head"><span></span><span>Equipo</span><span class="num">Pts</span><span class="num">€</span></div>` +
       rows.map((t,i) => `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos${i<C.genPrize?" prize":""}">${i+1}</span><span class="nm">${esc(nm(t.eq))}</span><span class="pts">${t.total}</span><span class="eur">${sg.premiosGeneral[i] ? sg.premiosGeneral[i] + " €" : ""}</span></div>`).join("") + `</div>`;
