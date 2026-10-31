@@ -516,6 +516,8 @@ table.pj tr.me.hl td { background-color: var(--hl-bg); background-image: linear-
 table.pj.eurj .cell:not(.empty) { color: var(--accent); }
 .tbl.g4 .row { grid-template-columns: 30px minmax(0,1fr) 68px 80px; }
 .tbl.g4.jor .row { grid-template-columns: 30px minmax(0,1fr) 50px 74px; }
+.segrow.sg3 .seg { gap: 6px; }
+.segrow.sg3 .seg button { font-size: 16px; line-height: 1.05; padding: 6px 4px; letter-spacing: .03em; }
 /* pestaña Jornada más compacta en alto (Ricardo 31/10) */
 .tbl.g4.jor .row { min-height: 34px; }
 .tbl.g4.jor .row.head { min-height: 26px; }
@@ -686,7 +688,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 15.5px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793476049";</script>
+<script>window.MONDO_BUILD = "1793481670";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1018,11 +1020,12 @@ function champView() {
 function sgView() {
   /* pestañas (Ricardo 31/10): Jornada (clasificación de la última jornada cerrada) · General · Premios (antes "Semanal") */
   const cur = state.tab.sg || "jor";
-  let h = `<div class="segrow"><button class="back" data-back aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${seg("sg", [["jor","Jornada"],["gen","General"],["sem","Premios"]])}</div>`;
   const nj = sg.nj, partial = sg.partial || [];
+  let J = 0; for (let j = nj; j >= 1 && !J; j--) if (!partial.includes(j) && sg.general.some(t => t.pts[j - 1] != null)) J = j;
+  /* pestaña con el número de la jornada y "Premios semanales" (Ricardo 31/10) */
+  let h = `<div class="segrow sg3"><button class="back" data-back aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${seg("sg", [["jor", J ? `Jornada ${J}` : "Jornada"],["gen","General"],["sem","Premios semanales"]])}</div>`;
   const th = i => `<th${partial.includes(i+1) ? ' class="part"' : ""}>J${i+1}</th>`;
   if (cur === "jor") {
-    let J = 0; for (let j = nj; j >= 1 && !J; j--) if (!partial.includes(j) && sg.general.some(t => t.pts[j - 1] != null)) J = j;
     if (!J) return h + `<p class="note">Todavía no hay jornadas cerradas.</p>`;
     const gtot = eq => (sg.general.find(g => g.eq === eq) || { total: 0 }).total;
     const eurOf = eq => ((sg.semanal.find(s => canon(s.eq) === canon(eq)) || { eur: [] }).eur[J - 1]) || 0;
