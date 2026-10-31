@@ -523,6 +523,13 @@ table.pj.eurj .cell:not(.empty) { color: var(--accent); }
 .tbl.g4.jor .row .pts { font-size: 22px; }
 .tbl.g4.jor .row .pos { font-size: 18px; }
 .tbl.g4.jor .row .pos.prize { width: 24px; height: 24px; font-size: 16.5px; border-radius: 6px; }
+/* pestaña General con la misma altura que Jornada y Premios (Ricardo 31/10) */
+.tbl.g4 .row { min-height: 34px; }
+.tbl.g4 .row.head { min-height: 26px; }
+.tbl.g4 .row .nm { font-size: 17px; }
+.tbl.g4 .row .pts { font-size: 22px; }
+.tbl.g4 .row .pos { font-size: 18px; }
+.tbl.g4 .row .pos.prize { width: 24px; height: 24px; font-size: 16.5px; border-radius: 6px; }
 .tbl.g4 .row .pos { text-align: center; width: 28px; }
 .tbl.g4 .row .pts, .tbl.g4 .row .eur, .tbl.g4 .row.head .num { text-align: center; }
 .tbl.champ .row { grid-template-columns: 30px minmax(0,1fr) 80px; }
@@ -679,7 +686,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 15.5px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793475610";</script>
+<script>window.MONDO_BUILD = "1793476049";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
