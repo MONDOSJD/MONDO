@@ -678,6 +678,36 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 15.5px; }
 :root[data-theme="dark"] .match:not(.hl), :root[data-theme="dark"] .tbl { background: #2E3532; border-color: #4A5450; }
 :root[data-theme="dark"] .tbl .row { border-top-color: #444E4A; }
 :root[data-theme="dark"] .tm.l { color: #A3ADA7; }
+/* ===== COMPACTO EN ALTO en todas las pantallas (Ricardo 01/11/2026): menos espacios verticales; el ancho no cambia ===== */
+.top { padding-top: 8px; padding-bottom: 6px; min-height: 62px; }
+.hero { padding: 20px 0 14px; }
+.frame { padding: 12px 12px 14px; margin-top: 12px; }
+.tiles { gap: 8px; } .tile { padding: 12px 14px; min-height: 64px; }
+.frame .stack .card { padding: 8px 14px; min-height: 64px; }
+.frame .stack .card.half { padding: 6px 10px 6px 14px; min-height: 64px; }
+.segrow { margin: 16px 0 10px; }
+.seg button { min-height: 40px; }
+.chips { padding-bottom: 8px; } .chip { height: 36px; }
+.row { min-height: 38px; } .row.head { min-height: 28px; }
+.tbl.liga .row { min-height: 34px; } .tbl.liga .row.head { min-height: 26px; }
+.tbl.champ .row { min-height: 34px; }
+.matches { gap: 6px; } .match { padding: 5px 12px; } .tm { min-height: 30px; }
+.matches.lg { gap: 5px; margin-top: 10px; } .matches.lg .match { padding: 3px 12px; } .matches.lg .tm { min-height: 25px; }
+.match.solo { grid-template-rows: repeat(2, 30px); } .matches.lg .match.solo { grid-template-rows: repeat(2, 25px); }
+table.pj th, table.pj td { padding-top: 6px; padding-bottom: 6px; }
+table.pj.eurj th:not(:first-child), table.pj.eurj td:not(:first-child) { padding-top: 4px; padding-bottom: 4px; }
+table.pj.eurj .cell { padding: 4px 6px; } table.pj.eurj .cell.empty { min-height: 23px; }
+.melist .r { padding: 5px 12px; }
+.teamlist { gap: 5px; } .teamlist .trow { min-height: 40px; padding: 2px 12px 2px 14px; } .teamlist .go { margin: 2px 6px; }
+.nhead { margin: 14px 0 8px; padding: 7px 14px; } .nhead:first-child { margin-top: 10px; } .nhead.phead { margin: 14px 0 8px; }
+.mepage .nhead.phead { margin: 10px 0 7px; padding: 6px 14px; } .mepage .nhead.phead:first-child { margin-top: 8px; }
+.megrid { gap: 8px; } .mepage .mebox { padding: 7px 10px 9px; }
+.sec { margin: 16px 0 6px; }
+.legend { margin-top: 8px; } .pendlegend { margin-top: 8px; }
+ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
+.potbl .r { padding: 6px 10px; } .potbl .c { padding: 7px 2px; min-height: 34px; } .potbl.fin .c { min-height: 40px; padding: 10px 2px; }
+.cronica { padding: 12px 14px; } .cronica p { line-height: 1.42; } .cronica p + p { margin-top: 8px; } .cronica .ctit { margin-bottom: 10px; }
+.prizebox { margin-top: 12px; padding: 10px 16px; gap: 4px; }
 </style>
 
 <div class="wrap">
@@ -688,7 +718,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 15.5px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793516549";</script>
+<script>window.MONDO_BUILD = "1793530786";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
