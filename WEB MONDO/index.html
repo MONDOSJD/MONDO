@@ -688,7 +688,7 @@ details p { margin: 8px 0 0; color: var(--ink2); font-size: 15.5px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793481670";</script>
+<script>window.MONDO_BUILD = "1793516549";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1030,7 +1030,7 @@ function sgView() {
     const gtot = eq => (sg.general.find(g => g.eq === eq) || { total: 0 }).total;
     const eurOf = eq => ((sg.semanal.find(s => canon(s.eq) === canon(eq)) || { eur: [] }).eur[J - 1]) || 0;
     const rows = sg.general.filter(t => t.pts[J - 1] != null).slice().sort((a, b) => b.pts[J - 1] - a.pts[J - 1] || gtot(b.eq) - gtot(a.eq));
-    h += `<div class="sec">Jornada ${J} · clasificación</div><div class="tbl g4 jor"><div class="row head"><span></span><span>Equipo</span><span class="num">Pts</span><span class="num">Premio</span></div>` +
+    h += `<div class="tbl g4 jor"><div class="row head"><span></span><span>Equipo</span><span class="num">Pts</span><span class="num">Premio</span></div>` +
       rows.map((t, i) => { const e = eurOf(t.eq); return `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos${e > 0 ? " prize" : ""}">${i + 1}</span><span class="nm">${esc(nm(t.eq))}</span><span class="pts">${t.pts[J - 1]}</span><span class="eur">${e > 0 ? eur2(e) : ""}</span></div>`; }).join("") + `</div>`;
   } else if (cur === "gen") {
     const rows = sg.general.slice().sort((a,b)=>b.total-a.total);
