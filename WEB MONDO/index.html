@@ -718,7 +718,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793530786";</script>
+<script>window.MONDO_BUILD = "1793603512";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1052,6 +1052,9 @@ function sgView() {
   const cur = state.tab.sg || "jor";
   const nj = sg.nj, partial = sg.partial || [];
   let J = 0; for (let j = nj; j >= 1 && !J; j--) if (!partial.includes(j) && sg.general.some(t => t.pts[j - 1] != null)) J = j;
+  /* cuadritos para consultar jornadas anteriores (Ricardo 02/11): J elegida en state.sel["sgj"+CK]; por defecto la última cerrada */
+  const played = []; for (let j = 1; j <= nj; j++) if (sg.general.some(t => t.pts[j - 1] != null)) played.push(j);
+  const jKey = "sgj" + CK; if (state.sel[jKey] && played.includes(state.sel[jKey])) J = state.sel[jKey]; else if (!J && played.length) J = played[played.length - 1];
   /* pestaña con el número de la jornada y "Premios semanales" (Ricardo 31/10) */
   let h = `<div class="segrow sg3"><button class="back" data-back aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>${seg("sg", [["jor", J ? `Jornada ${J}` : "Jornada"],["gen","General"],["sem","Premios semanales"]])}</div>`;
   const th = i => `<th${partial.includes(i+1) ? ' class="part"' : ""}>J${i+1}</th>`;
@@ -1062,6 +1065,8 @@ function sgView() {
     const rows = sg.general.filter(t => t.pts[J - 1] != null).slice().sort((a, b) => b.pts[J - 1] - a.pts[J - 1] || gtot(b.eq) - gtot(a.eq));
     h += `<div class="tbl g4 jor"><div class="row head"><span></span><span>Equipo</span><span class="num">Pts</span><span class="num">Premio</span></div>` +
       rows.map((t, i) => { const e = eurOf(t.eq); return `<div class="row${meCls(t.eq)}" data-tm="${esc(canon(t.eq))}"><span class="pos${e > 0 ? " prize" : ""}">${i + 1}</span><span class="nm">${esc(nm(t.eq))}</span><span class="pts">${t.pts[J - 1]}</span><span class="eur">${e > 0 ? eur2(e) : ""}</span></div>`; }).join("") + `</div>`;
+    if (partial.includes(J)) h += `<div class="pendlegend"><span class="pendbox"></span>Jornada sin terminar</div>`;
+    h += `<div class="sec">Otras jornadas</div><div class="chips sgjchips">${played.map(j => `<button class="chip${partial.includes(j) ? " pendj" : " closed"}" data-sel="${jKey}:${j}" aria-selected="${j === J}">J${j}</button>`).join("")}</div>`;
   } else if (cur === "gen") {
     const rows = sg.general.slice().sort((a,b)=>b.total-a.total);
     h += `<div class="tbl g4"><div class="row head"><span></span><span>Equipo</span><span class="num">Pts</span><span class="num">€</span></div>` +
