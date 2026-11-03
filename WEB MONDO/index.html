@@ -720,7 +720,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793727575";</script>
+<script>window.MONDO_BUILD = "1793730414";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -954,8 +954,8 @@ function champTicker() {
 function premier() {
   const card = (t, extra, go) => `<div class="card"><span class="grow"><span class="t">${t}</span>${extra}</span><button class="go" data-go="${go}" aria-label="Entrar en ${t}">${GO_SVG}</button></div>`;
   return `<div class="frame"><div class="upd"><span>Última actualización</span><b>${(UPDATED[CK] || "").replace(/\//g, "-")}</b></div><div class="stack">
-    ${card("Semanal y General", genTicker(), "semanal")}
     <div class="cardrow"><div class="card half"><span class="grow"><span class="t">Mi equipo</span><span class="me-sub">${esc(nm(MI_EQUIPO))}</span></span><button class="go" data-go="miequipo" aria-label="Entrar en Mi equipo">${GO_SVG}</button></div><div class="card half"><span class="grow"><span class="t">Otros equipos</span><span class="me-sub">Ver todos</span></span><button class="go" data-go="otros" aria-label="Entrar en Otros equipos">${GO_SVG}</button></div></div>
+    ${card("Semanal y General", genTicker(), "semanal")}
     ${card("Liga Regular", clasTicker(), "liga")}
     ${champ ? card("Champions", champTicker(), "champions") : ""}
     ${card("La crónica", `<span class="me-sub">Resumen de tu jornada</span>`, "cronica")}
