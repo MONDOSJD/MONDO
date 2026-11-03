@@ -651,7 +651,7 @@ ol.normas .nk { display: grid; place-items: center; min-width: 30px; height: 26p
 .prizebox { margin: 16px 0 0; display: inline-grid; gap: 6px; padding: 12px 18px; border-radius: 10px; background: #4DF04D; color: #0A1F0A; font: 700 18.5px/1.1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 2px 8px rgba(30,140,30,.25); }
 .prizebox div { display: grid; grid-template-columns: 34px auto; }
 /* Mi crónica (Ricardo 28/10) */
-.menote { margin: 10px 0 0; padding: 9px 12px; border-radius: 12px; background: var(--surface); border: 1px dashed var(--line); border-left: 5px solid #FFC000; font: 500 15.5px/1.4 var(--font-body); color: var(--ink2); }
+.menote { margin: 14px 0 0; padding: 9px 12px; border-radius: 12px; background: var(--surface); border: 1px dashed var(--line); border-left: 5px solid #FFC000; font: 500 15.5px/1.4 var(--font-body); color: var(--ink2); }
 .menote b { color: var(--ink); }
 .cronica { margin: 0 0 12px; padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid #9AA39C; }
 .cronica p { margin: 0; font: 500 18.5px/1.5 var(--font-body); color: var(--ink); }
@@ -720,7 +720,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793716208";</script>
+<script>window.MONDO_BUILD = "1793716903";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1167,8 +1167,6 @@ function miEquipoView(team) {
       (champ ? `<span>Champions (pendiente de playoff)</span><span>–</span>` : "") +
       `<span>${C.marks.length > 1 ? "Mejores marcas" : "Mejor marca"} (si acabara hoy)</span><span>${eur2(marks)}</span></span>` +
       `<span class="totrow">${C.cuota ? `<span class="cuota">Cuota ${eur2(C.cuota)} (a restar)</span><span class="tot ${total >= C.cuota ? "over" : "under"}">${eur2(total)}</span>` : `<span></span><span class="tot">${eur2(total)}</span>`}</span></div></div>`;
-  /* EXCEPCIÓN solo para Ricardo (Richard City), solo en la Premier y solo en su propio "Cómo voy" (Ricardo 03/11/2026) */
-  if (CK === "premier" && T === MI_EQUIPO && canon(T) === "RICHARD CITY") h += `<div class="menote"><b>Nota:</b> en la jornada 9 habrías sumado <b>73 puntos</b> de no ser por la penalización por estar en negativo antes del inicio de la jornada (aun así habrías perdido los dos encuentros de esa jornada, el de Liga Regular y el de Champions).</div>`;
   h += `<div class="nhead phead">Próximos partidos</div><div class="melist">` +
     lnext.map(x => meRow(x, "Liga")).join("") + (cnext ? meRow(cnext, "Champions") : "") + `</div>`;
   h += `<div class="nhead phead" data-nav="liga|t.liga=clas|${HL}">Liga Regular</div>`;
@@ -1184,6 +1182,8 @@ function miEquipoView(team) {
     gt.pts.map((p, i) => p == null ? "" : `<div class="${isBest(p, i + 1, gt.eq) ? "best" + isBest(p, i + 1, gt.eq) : ""}${(sg.partial || []).includes(i + 1) ? " part" : ""}"><small>J${i + 1}</small><b>${p}</b><i>${sem.eur[i] != null ? fmt(sem.eur[i]) + " €" : ""}</i></div>`).join("") + `</div>`;
   // leyenda naranja bajo Puntos por jornada si alguna jornada mostrada está sin terminar (Ricardo 28/10)
   if (gt.pts.some((p, i) => p != null && (sg.partial || []).includes(i + 1))) h += `<div class="pendlegend"><span class="pendbox"></span>Jornada sin terminar</div>`;
+  /* EXCEPCIÓN solo para Ricardo (Richard City), solo en la Premier y solo en su propio "Cómo voy" (Ricardo 03/11/2026; abajo del todo, 04/11) */
+  if (CK === "premier" && T === MI_EQUIPO && canon(T) === "RICHARD CITY") h += `<div class="menote"><b>Nota:</b> en la jornada 9 habrías sumado <b>73 puntos</b> de no ser por la penalización por estar en negativo antes del inicio de la jornada (aun así habrías perdido los dos encuentros de esa jornada, el de Liga Regular y el de Champions).</div>`;
   h += `</div>`;
   return h;
 }
