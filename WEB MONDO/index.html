@@ -710,6 +710,18 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
 .potbl .r { padding: 6px 10px; } .potbl .c { padding: 7px 2px; min-height: 34px; } .potbl.fin .c { min-height: 40px; padding: 10px 2px; }
 .cronica { padding: 12px 14px; } .cronica p { line-height: 1.42; } .cronica p + p { margin-top: 8px; } .cronica .ctit { margin-bottom: 10px; }
 .prizebox { margin-top: 12px; padding: 10px 16px; gap: 4px; }
+
+/* SOLO RICARDO (Ricardo 04/11/2026): panel del titular algo más pequeño y 5ª pestaña "Próximos partidos" en la portada */
+.frame.ric .hero { padding-bottom: 12px; }
+.frame.ric .brand { padding: 4px 16px 4px 4px; }
+.frame.ric .logo { width: clamp(86px, 28vw, 132px); height: clamp(86px, 28vw, 132px); }
+.frame.ric .brand .word { font-size: clamp(45px, 14vw, 86px); }
+.tile.prox .name { font-size: 27px; line-height: 1.05; }
+.proxpage .nhead[data-comp] { cursor: pointer; }
+.proxpage .nhead.phead { display: flex; align-items: center; gap: 8px; }
+.proxpage .nhead.phead img { width: 22px; height: 22px; flex: none; }
+.proxpage .melist .r { grid-template-columns: 52px minmax(0,1fr) auto; }
+.proxpage .melist .r > span:last-child:empty { display: none; }
 </style>
 
 <div class="wrap">
@@ -720,7 +732,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1793730414";</script>
+<script>window.MONDO_BUILD = "1793780460";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -924,8 +936,8 @@ const GO_SVG = '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>';
 
 function home() {
   return `
-  <div class="frame"><section class="hero"><div class="brand"><div class="logo" role="img" aria-label="Mondo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><radialGradient id="mlGold" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFFBE0"/><stop offset=".35" stop-color="#FFE14D"/><stop offset=".75" stop-color="#FFC107"/><stop offset="1" stop-color="#FF9800"/></radialGradient><filter id="mlStarGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3.2"/></filter><filter id="mlBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter></defs><rect class="lg-bg" x="1" y="1" width="198" height="198" rx="44" fill="#FFFFFF" stroke="#E2E7DF" stroke-width="2"/><g transform="translate(100 100) scale(1.3) translate(-100 -100)"><ellipse class="lg-shadow" cx="100" cy="164" rx="40" ry="5" fill="#16231D" opacity=".10"/><g class="ml-back"><path class="r-base" fill="none" stroke="#18E06A" stroke-width="3.5" stroke-linecap="round" opacity="0.45"/><path class="r-tail" fill="none" stroke="#00E85A" stroke-width="3.5" stroke-linecap="round" opacity="0.25"/><path class="r-glow" fill="none" stroke="#39FF7E" stroke-width="9" stroke-linecap="round" filter="url(#mlBlur)" opacity="0.45"/><path class="r-main" fill="none" stroke="#00E85A" stroke-width="5" stroke-linecap="round" opacity="0.6"/><path class="r-core" fill="none" stroke="#C9FFD8" stroke-width="2" stroke-linecap="round" opacity="0.4"/><path class="r-strail" fill="none" stroke="#FFC107" stroke-width="3" stroke-linecap="round" opacity=".75" filter="url(#mlBlur)"/><path class="r-strail2" fill="none" stroke="#FFE680" stroke-width="1.6" stroke-linecap="round"/><g class="r-star" style="display:none" opacity="0.55"><circle r="9" fill="#FFB300" opacity=".75" filter="url(#mlStarGlow)"/><circle r="4.6" fill="#FFC800" opacity=".9" filter="url(#mlBlur)"/><g class="r-star-rot"><polygon points="0.00,-7.50 0.73,-1.76 2.97,-2.97 1.76,-0.73 7.50,0.00 1.76,0.73 2.97,2.97 0.73,1.76 0.00,7.50 -0.73,1.76 -2.97,2.97 -1.76,0.73 -7.50,0.00 -1.76,-0.73 -2.97,-2.97 -0.73,-1.76" fill="url(#mlGold)" stroke="#FF8F00" stroke-width=".5" stroke-linejoin="round"/></g><circle r="1.6" fill="#FFFDF0"/></g></g></g></svg><canvas class="lg-ball"></canvas><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g transform="translate(100 100) scale(1.3) translate(-100 -100)"><g class="ml-front"><path class="r-halo" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/><path class="r-base" fill="none" stroke="#18E06A" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/><path class="r-tail" fill="none" stroke="#00E85A" stroke-width="3.5" stroke-linecap="round" opacity="0.45"/><path class="r-glow" fill="none" stroke="#39FF7E" stroke-width="9" stroke-linecap="round" filter="url(#mlBlur)" opacity="0.9"/><path class="r-main" fill="none" stroke="#00E85A" stroke-width="5" stroke-linecap="round" opacity="1"/><path class="r-core" fill="none" stroke="#C9FFD8" stroke-width="2" stroke-linecap="round" opacity="1"/><path class="r-strail" fill="none" stroke="#FFC107" stroke-width="3" stroke-linecap="round" opacity=".75" filter="url(#mlBlur)"/><path class="r-strail2" fill="none" stroke="#FFE680" stroke-width="1.6" stroke-linecap="round"/><g class="r-star" style="display:none" opacity="1"><circle r="9" fill="#FFB300" opacity=".75" filter="url(#mlStarGlow)"/><circle r="4.6" fill="#FFC800" opacity=".9" filter="url(#mlBlur)"/><g class="r-star-rot"><polygon points="0.00,-7.50 0.73,-1.76 2.97,-2.97 1.76,-0.73 7.50,0.00 1.76,0.73 2.97,2.97 0.73,1.76 0.00,7.50 -0.73,1.76 -2.97,2.97 -1.76,0.73 -7.50,0.00 -1.76,-0.73 -2.97,-2.97 -0.73,-1.76" fill="url(#mlGold)" stroke="#FF8F00" stroke-width=".5" stroke-linejoin="round"/></g><circle r="1.6" fill="#FFFDF0"/></g></g></g></svg></div><h1 class="word">Mon<span>do</span></h1></div></section>
-  <div class="tiles">${ALL_COMPS.map(k => { const c = COMPS[k]; if (!DATA[k]) return lockedTile(k); const st = compStats(k); return `<div class="tile"><span class="grow"><span class="name">${c.name.includes(" ") ? `<span class="nw"><img class="mini" src="${c.ball === "bk" ? MINI_BK : MINI_FB}" alt="">${c.name.split(" ")[0]}</span> ${c.name.split(" ").slice(1).join(" ")}` : `<span class="nw"><img class="mini" src="${c.ball === "bk" ? MINI_BK : MINI_FB}" alt="">${c.name}</span>`}</span>${freshClose(k) ? onceTicker("tkJor" + k, freshList(k).map(c => `<span>Jornada ${c.j}<i class="siren" role="img" aria-label="recién cerrada"><i class="halo h8 l" style="--dx:-10px;--d:0.0s"></i><i class="halo h8 r" style="--dx:10px;--d:1.0s"></i><i class="halo h8 br" style="--dx:6px;--d:1.25s"></i><i class="halo h8 b" style="--dx:0px;--d:1.5s"></i><i class="halo h8 bl" style="--dx:-6px;--d:1.75s"></i><i class="sd"></i><i class="halo h8 fl front" style="--dx:-6px;--d:0.25s"></i><i class="halo h8 f front" style="--dx:0px;--d:0.5s"></i><i class="halo h8 fr front" style="--dx:6px;--d:0.75s"></i></i><em>cerrada ${fmtClose(c.at)}</em></span>`), freshList(k).map(c => `Jornada ${c.j} cerrada`).join(", "), 9.5 + 7 * (freshList(k).length - 1), 2.5) : ""}</span><button class="go" data-comp="${k}" aria-label="Entrar en ${c.name}">${GO_SVG}</button></div>`; }).join("")}
+  <div class="frame${IS_RIC() ? " ric" : ""}"><section class="hero"><div class="brand"><div class="logo" role="img" aria-label="Mondo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><radialGradient id="mlGold" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFFBE0"/><stop offset=".35" stop-color="#FFE14D"/><stop offset=".75" stop-color="#FFC107"/><stop offset="1" stop-color="#FF9800"/></radialGradient><filter id="mlStarGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3.2"/></filter><filter id="mlBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter></defs><rect class="lg-bg" x="1" y="1" width="198" height="198" rx="44" fill="#FFFFFF" stroke="#E2E7DF" stroke-width="2"/><g transform="translate(100 100) scale(1.3) translate(-100 -100)"><ellipse class="lg-shadow" cx="100" cy="164" rx="40" ry="5" fill="#16231D" opacity=".10"/><g class="ml-back"><path class="r-base" fill="none" stroke="#18E06A" stroke-width="3.5" stroke-linecap="round" opacity="0.45"/><path class="r-tail" fill="none" stroke="#00E85A" stroke-width="3.5" stroke-linecap="round" opacity="0.25"/><path class="r-glow" fill="none" stroke="#39FF7E" stroke-width="9" stroke-linecap="round" filter="url(#mlBlur)" opacity="0.45"/><path class="r-main" fill="none" stroke="#00E85A" stroke-width="5" stroke-linecap="round" opacity="0.6"/><path class="r-core" fill="none" stroke="#C9FFD8" stroke-width="2" stroke-linecap="round" opacity="0.4"/><path class="r-strail" fill="none" stroke="#FFC107" stroke-width="3" stroke-linecap="round" opacity=".75" filter="url(#mlBlur)"/><path class="r-strail2" fill="none" stroke="#FFE680" stroke-width="1.6" stroke-linecap="round"/><g class="r-star" style="display:none" opacity="0.55"><circle r="9" fill="#FFB300" opacity=".75" filter="url(#mlStarGlow)"/><circle r="4.6" fill="#FFC800" opacity=".9" filter="url(#mlBlur)"/><g class="r-star-rot"><polygon points="0.00,-7.50 0.73,-1.76 2.97,-2.97 1.76,-0.73 7.50,0.00 1.76,0.73 2.97,2.97 0.73,1.76 0.00,7.50 -0.73,1.76 -2.97,2.97 -1.76,0.73 -7.50,0.00 -1.76,-0.73 -2.97,-2.97 -0.73,-1.76" fill="url(#mlGold)" stroke="#FF8F00" stroke-width=".5" stroke-linejoin="round"/></g><circle r="1.6" fill="#FFFDF0"/></g></g></g></svg><canvas class="lg-ball"></canvas><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g transform="translate(100 100) scale(1.3) translate(-100 -100)"><g class="ml-front"><path class="r-halo" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/><path class="r-base" fill="none" stroke="#18E06A" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/><path class="r-tail" fill="none" stroke="#00E85A" stroke-width="3.5" stroke-linecap="round" opacity="0.45"/><path class="r-glow" fill="none" stroke="#39FF7E" stroke-width="9" stroke-linecap="round" filter="url(#mlBlur)" opacity="0.9"/><path class="r-main" fill="none" stroke="#00E85A" stroke-width="5" stroke-linecap="round" opacity="1"/><path class="r-core" fill="none" stroke="#C9FFD8" stroke-width="2" stroke-linecap="round" opacity="1"/><path class="r-strail" fill="none" stroke="#FFC107" stroke-width="3" stroke-linecap="round" opacity=".75" filter="url(#mlBlur)"/><path class="r-strail2" fill="none" stroke="#FFE680" stroke-width="1.6" stroke-linecap="round"/><g class="r-star" style="display:none" opacity="1"><circle r="9" fill="#FFB300" opacity=".75" filter="url(#mlStarGlow)"/><circle r="4.6" fill="#FFC800" opacity=".9" filter="url(#mlBlur)"/><g class="r-star-rot"><polygon points="0.00,-7.50 0.73,-1.76 2.97,-2.97 1.76,-0.73 7.50,0.00 1.76,0.73 2.97,2.97 0.73,1.76 0.00,7.50 -0.73,1.76 -2.97,2.97 -1.76,0.73 -7.50,0.00 -1.76,-0.73 -2.97,-2.97 -0.73,-1.76" fill="url(#mlGold)" stroke="#FF8F00" stroke-width=".5" stroke-linejoin="round"/></g><circle r="1.6" fill="#FFFDF0"/></g></g></g></svg></div><h1 class="word">Mon<span>do</span></h1></div></section>
+  <div class="tiles">${ALL_COMPS.map(k => { const c = COMPS[k]; if (!DATA[k]) return lockedTile(k); const st = compStats(k); return `<div class="tile"><span class="grow"><span class="name">${c.name.includes(" ") ? `<span class="nw"><img class="mini" src="${c.ball === "bk" ? MINI_BK : MINI_FB}" alt="">${c.name.split(" ")[0]}</span> ${c.name.split(" ").slice(1).join(" ")}` : `<span class="nw"><img class="mini" src="${c.ball === "bk" ? MINI_BK : MINI_FB}" alt="">${c.name}</span>`}</span>${freshClose(k) ? onceTicker("tkJor" + k, freshList(k).map(c => `<span>Jornada ${c.j}<i class="siren" role="img" aria-label="recién cerrada"><i class="halo h8 l" style="--dx:-10px;--d:0.0s"></i><i class="halo h8 r" style="--dx:10px;--d:1.0s"></i><i class="halo h8 br" style="--dx:6px;--d:1.25s"></i><i class="halo h8 b" style="--dx:0px;--d:1.5s"></i><i class="halo h8 bl" style="--dx:-6px;--d:1.75s"></i><i class="sd"></i><i class="halo h8 fl front" style="--dx:-6px;--d:0.25s"></i><i class="halo h8 f front" style="--dx:0px;--d:0.5s"></i><i class="halo h8 fr front" style="--dx:6px;--d:0.75s"></i></i><em>cerrada ${fmtClose(c.at)}</em></span>`), freshList(k).map(c => `Jornada ${c.j} cerrada`).join(", "), 9.5 + 7 * (freshList(k).length - 1), 2.5) : ""}</span><button class="go" data-comp="${k}" aria-label="Entrar en ${c.name}">${GO_SVG}</button></div>`; }).join("")}${IS_RIC() ? `<div class="tile prox"><span class="grow"><span class="name">Próximos partidos</span></span><button class="go" data-go="proximos" aria-label="Entrar en Próximos partidos">${GO_SVG}</button></div>` : ""}
   </div></div>
   <details><summary>Poner Mondo en la pantalla de inicio</summary>
     <p><b>Android (Chrome):</b> menú ⋮ → Añadir a la pantalla de inicio.<br><b>iPhone (Safari):</b> botón Compartir → Añadir a pantalla de inicio.</p>
@@ -1404,6 +1416,26 @@ function cronicaView() {
   if (partial.includes(N)) h += `<div class="pendlegend"><span class="pendbox"></span>Jornada sin terminar</div>`;
   return h;
 }
+/* SOLO RICARDO (Ricardo 04/11/2026): "Próximos partidos" = sus siguientes partidos sin jugar en las 4 competiciones (Liga Regular y Champions), se actualiza solo con cada jornada. Nadie más lo ve */
+const IS_RIC = () => !!(DATA.premier && COMPS.premier && canon(COMPS.premier.mi) === "RICHARD CITY");
+function proximosView() {
+  const prev = CK; let h = `<div class="mepage proxpage">`;
+  ALL_COMPS.filter(k => DATA[k]).forEach(k => {
+    useComp(k); const T = canon(MI_EQUIPO), HL = `hl=${esc(T)}`;
+    const restOf = (j, si) => j.rest && j.rest[si] ? { name: j.rest[si], val: null, played: hasRes(j.sets.flat()) } : null;
+    const ln = teamMatches(liga.jornadas, T, j => j.sets, restOf).filter(x => !x.played);
+    const lnext = ln.filter(x => x.j === (ln[0] || {}).j);
+    lnext.forEach(x => x.nav = `liga|c=${k}|t.liga=res|s.liga${k}=${x.j}|${HL}`);
+    let rows = lnext.map(x => meRow(x, "Liga"));
+    const g = champ ? ["A", "B"].find(q => champ[q].clas.some(t => canon(t.eq) === T)) : null;
+    if (g) { const cn = teamMatches(champ[g].jornadas, T, j => [j.m], j => j.rest ? { name: j.rest, val: null, played: j.m.some(m => m[2] !== null) } : null).filter(x => !x.played)[0];
+      if (cn) { cn.nav = `champions|c=${k}|t.champ=${g}|s.champ${k}${g}=${cn.j}|${HL}`; rows.push(meRow(cn, "Champions")); } }
+    h += `<div class="nhead phead" data-comp="${k}"><img src="${C.ball === "bk" ? MINI_BK : MINI_FB}" alt="">${C.name} · ${esc(nm(MI_EQUIPO))}</div><div class="melist">` +
+      (rows.length ? rows.join("").replace(/ data-tm="[^"]*"/g, "") : `<div class="r"><span></span><span class="op">Sin partidos pendientes</span></div>`) + `</div>`;
+  });
+  useComp(prev);
+  return h + `</div>`;
+}
 const ROUTES = {
   home:      { crumb: "", title: "", render: home },
   premier:   { crumb: "", title: () => C.title, plain: true, render: premier },
@@ -1414,9 +1446,10 @@ const ROUTES = {
   cronica:   { crumb: "", title: "La crónica", render: cronicaView },
   miequipo:  { crumb: "", title: () => nm(MI_EQUIPO), render: () => miEquipoView() },
   otros:     { crumb: "", title: "Otros equipos", render: otrosView },
+  proximos:  { crumb: "", title: "Próximos partidos", render: proximosView },
   otro:      { crumb: "", title: () => nm(OTROS().includes(state.sel.otro) ? state.sel.otro : OTROS()[0]), render: otroView }
 };
-const PARENT = { premier: "home", liga: "premier", champions: "premier", semanal: "premier", normas: "premier", cronica: "premier", miequipo: "premier", otros: "premier", otro: "otros" };
+const PARENT = { premier: "home", liga: "premier", champions: "premier", semanal: "premier", normas: "premier", cronica: "premier", miequipo: "premier", otros: "premier", otro: "otros", proximos: "home" };
 
 /* hueco en blanco dentro de una cinta (p. ej. entre Grupo A y Grupo B): ancho = cinta visible + N segundos de recorrido */
 function fitTickerGaps() {
@@ -1475,7 +1508,7 @@ function navTo(spec) {
   if (!spec) return;
   const [route, ...parts] = spec.split("|"); let sc = "";
   go(route, true, () => parts.forEach(p => { const i = p.indexOf("="), k = p.slice(0, i), v = p.slice(i + 1);
-    if (k.startsWith("t.")) state.tab[k.slice(2)] = v; else if (k.startsWith("s.")) state.sel[k.slice(2)] = +v; else if (k === "hl") state.hl = v; else if (k === "sc") sc = v; }));
+    if (k === "c") { if (DATA[v]) useComp(v); } else if (k.startsWith("t.")) state.tab[k.slice(2)] = v; else if (k.startsWith("s.")) state.sel[k.slice(2)] = +v; else if (k === "hl") state.hl = v; else if (k === "sc") sc = v; }));
   if (sc) setTimeout(() => scrollToMark(sc), 80);
 }
 /* desde las cajas "1ª / 2ª mejor marca" (Mi equipo / Otros equipos): ir directo a la casilla de esa marca en Puntos por jornada, centrada y con un destello (Ricardo 30/10) */
