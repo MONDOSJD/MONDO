@@ -760,7 +760,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1794252665";</script>
+<script>window.MONDO_BUILD = "1794253869";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1530,20 +1530,6 @@ function trayectoriaView() {
   const lastY = y(now.saldo);
   g += `<text class="v" x="${x(n) - 2}" y="${(lastY + (lastY < T + 24 ? 20 : -10)).toFixed(1)}" text-anchor="end">${eurS(now.saldo)}</text>`;
   h += `<div class="nhead phead">Saldo en cada momento</div><div class="trbox"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Saldo jornada a jornada">${g}</svg></div>`;
-  /* 2) lo que ibas ganando en cada jornada, por competición (barras apiladas) */
-  const H2 = 180, T2 = 10, ih2 = H2 - T2 - B, L2 = 40, iw2 = W - L2 - 8;
-  const P = D.pts.slice(1), mx = Math.max(1, ...P.map(p => p.tot)), st2 = [5, 10, 20, 25, 50, 100, 200].find(s => mx / s <= 4) || 500, top = Math.ceil(mx / st2) * st2;
-  const bw = iw2 / Math.max(1, n), y2 = v => T2 + (1 - v / top) * ih2;
-  let g2 = "";
-  for (let v = 0; v <= top; v += st2) g2 += `<line x1="${L2}" x2="${L2 + iw2}" y1="${y2(v).toFixed(1)}" y2="${y2(v).toFixed(1)}" stroke="var(--tr-grid)" stroke-width="1"${v ? ` stroke-dasharray="2 4"` : ""}/><text x="${L2 - 6}" y="${(y2(v) + 4).toFixed(1)}" text-anchor="end">${v}</text>`;
-  P.forEach((p, i) => {
-    const cx = L2 + i * bw, w = Math.max(4, Math.min(22, bw - 6)), bx = cx + (bw - w) / 2; let base = 0;
-    p.parts.filter(q => q.v.tot > .005).forEach((q, qi, arr) => { const y0 = y2(base), y1 = y2(base + q.v.tot); base += q.v.tot; const hgt = Math.max(0, y0 - y1 - (qi ? 2 : 0));
-      g2 += qi === arr.length - 1 && hgt > 5 ? `<path d="M${bx.toFixed(1)},${(y1 + hgt).toFixed(1)}V${(y1 + 4).toFixed(1)}q0,-4 4,-4h${(w - 8).toFixed(1)}q4,0 4,4V${(y1 + hgt).toFixed(1)}Z" fill="var(--tr-${q.k})"/>` : `<rect x="${bx.toFixed(1)}" y="${y1.toFixed(1)}" width="${w.toFixed(1)}" height="${hgt.toFixed(1)}" fill="var(--tr-${q.k})"/>`; });
-    if (n <= 14 || (i + 1) % Math.ceil(n / 10) === 0) g2 += `<text x="${(cx + bw / 2).toFixed(1)}" y="${H2 - 6}" text-anchor="middle">J${p.n}</text>`;
-    g2 += `<rect x="${cx.toFixed(1)}" y="${T2}" width="${bw.toFixed(1)}" height="${ih2}" fill="transparent" data-tip="Jornada ${p.n}|${p.parts.filter(q => q.v.tot > .005).map(q => q.name + ": " + eur2(q.v.tot)).join("|") || "Sin premios"}|Total: ${eur2(p.tot)}"/>`;
-  });
-  h += `<div class="nhead phead">Ganando en cada jornada</div><div class="trbox"><div class="trleg">${D.comps.map(c => `<span><i style="background:var(--tr-${c.k})"></i>${c.name}</span>`).join("")}</div><svg viewBox="0 0 ${W} ${H2}" role="img" aria-label="Lo que ibas ganando en cada jornada, por competición">${g2}</svg></div>`;
   /* 3) ahora mismo: de dónde sale y por competición */
   h += `<div class="nhead phead">Ahora mismo</div><div class="melist">` + TR_KEYS.map(([q, l]) => `<div class="r" style="grid-template-columns:minmax(0,1fr) auto;padding-inline:12px"><span class="op" style="font-size:16px">${l}${q === "sem" ? ` <i>(cobrado)</i>` : ""}</span><span class="sc" style="font-size:17px">${eur2(now.by[q])}</span></div>`).join("") +
     `<div class="r" style="grid-template-columns:minmax(0,1fr) auto;padding-inline:12px"><span class="op" style="font-size:16px"><i>Champions</i></span><span class="sc" style="font-size:15px"><em>pendiente de playoff</em></span></div></div>`;
