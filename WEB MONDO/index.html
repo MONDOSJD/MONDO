@@ -760,7 +760,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1794253869";</script>
+<script>window.MONDO_BUILD = "1794332450";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1533,7 +1533,7 @@ function trayectoriaView() {
   /* 3) ahora mismo: de dónde sale y por competición */
   h += `<div class="nhead phead">Ahora mismo</div><div class="melist">` + TR_KEYS.map(([q, l]) => `<div class="r" style="grid-template-columns:minmax(0,1fr) auto;padding-inline:12px"><span class="op" style="font-size:16px">${l}${q === "sem" ? ` <i>(cobrado)</i>` : ""}</span><span class="sc" style="font-size:17px">${eur2(now.by[q])}</span></div>`).join("") +
     `<div class="r" style="grid-template-columns:minmax(0,1fr) auto;padding-inline:12px"><span class="op" style="font-size:16px"><i>Champions</i></span><span class="sc" style="font-size:15px"><em>pendiente de playoff</em></span></div></div>`;
-  h += `<div class="melist" style="margin-top:8px">` + D.comps.map(c => { const v = c.at.length ? c.at[c.at.length - 1].tot : 0; return `<div class="r" data-comp="${c.k}" style="grid-template-columns:minmax(0,1fr) auto auto;gap:6px;padding-inline:10px"><span class="op" style="font-size:16px"><i style="display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;background:var(--tr-${c.k})"></i>${c.name}</span><span class="sc" style="font-size:16px"><em>ganas </em>${eur2(v)}</span><span class="sc" style="font-size:16px;min-width:84px;text-align:right"><em>saldo </em>${eurS(v - c.cuota)}</span></div>`; }).join("") + `</div>`;
+  h += `<div class="melist" style="margin-top:8px">` + D.comps.map(c => { const v = c.at.length ? c.at[c.at.length - 1].tot : 0; return `<div class="r" data-comp="${c.k}" style="grid-template-columns:minmax(0,1fr) auto auto;gap:6px;padding-inline:10px"><span class="op" style="font-size:16px">${c.name}</span><span class="sc" style="font-size:16px"><em>ganas </em>${eur2(v)}</span><span class="sc" style="font-size:16px;min-width:84px;text-align:right"><em>saldo </em>${eurS(v - c.cuota)}</span></div>`; }).join("") + `</div>`;
   h += `<p class="trnote">En cada jornada, lo que te llevarías si la temporada acabara ahí: premios semanales cobrados + Liga Regular y General según tu puesto + mejores marcas que tenías, menos ${eur2(D.cuotas)} de cuotas. Toca la gráfica para ver el detalle.</p></div>`;
   return h;
 }
