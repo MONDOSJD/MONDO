@@ -765,6 +765,11 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
 .pendlegend { font-size: 18px; margin-left: 0; max-width: none; }
 .pendlegend .pendbox { width: 20px; height: 20px; border-radius: 5px; }
 .sgfoot .pendlegend .pendbox { width: 20px; height: 20px; }
+
+/* solo el nombre lleva a la ficha (Ricardo 11/11/2026): el resto de la fila no parece pulsable */
+.row[data-tm], tr[data-tm], .tm[data-tm] { cursor: default; -webkit-tap-highlight-color: transparent; }
+.row[data-tm] .nm, tr[data-tm] td:first-child, .tm[data-tm] .n { cursor: pointer; }
+.row[data-tm]:active, tr[data-tm]:active td, .tm[data-tm]:active { filter: none; }
 </style>
 
 <div class="wrap">
@@ -775,7 +780,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1794409922";</script>
+<script>window.MONDO_BUILD = "1794421747";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1658,7 +1663,8 @@ document.addEventListener("click", e => {
   const cp = e.target.closest("[data-comp]"); if (cp) { useComp(cp.dataset.comp); state.hl = ""; go("premier"); return; }
   const g = e.target.closest("[data-go]"); if (g) { state.hl = ""; go(g.dataset.go); return; }
   const tb = e.target.closest("[data-team]"); if (tb) { go("otro", true, () => { state.sel.otro = tb.dataset.team; }); return; }
-  const tmk = e.target.closest("[data-tm]"); if (tmk) { openTeam(tmk.dataset.tm); return; }
+  /* en clasificaciones, tablas por jornada y partidos SOLO el nombre abre la ficha del equipo; los puntos, premios y resultados no (Ricardo 11/11/2026) */
+  const tmk = e.target.closest("[data-tm]"); if (tmk) { if (!tmk.matches(".row, tr, .tm") || e.target.closest(".nm, .n, td:first-child")) openTeam(tmk.dataset.tm); return; }
   const nv = e.target.closest("[data-nav]"); if (nv) { navTo(nv.dataset.nav); return; }
   if (e.target.closest("[data-back]")) { back(); return; }
   const s = e.target.closest("[data-seg]"); if (s) { const [k,v] = s.dataset.seg.split(":"); state.tab[k] = v; render(); return; }
