@@ -770,6 +770,10 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
 .row[data-tm], tr[data-tm], .tm[data-tm] { cursor: default; -webkit-tap-highlight-color: transparent; }
 .row[data-tm] .nm, tr[data-tm] td:first-child, .tm[data-tm] .n { cursor: pointer; }
 .row[data-tm]:active, tr[data-tm]:active td, .tm[data-tm]:active { filter: none; }
+
+/* "Premios semanales" en Cómo voy (Ricardo 12/11/2026): el rótulo puede ir en dos líneas sin cortarse */
+.mepage .megrid.c3 .mebox .lb.lb2 { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.05; }
+.mepage .megrid.c3 .mebox { align-content: space-between; } /* las casillas de la misma fila quedan a la misma altura */
 </style>
 
 <div class="wrap">
@@ -780,7 +784,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1794421747";</script>
+<script>window.MONDO_BUILD = "1794470314";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1215,14 +1219,14 @@ function miEquipoView(team) {
   /* mejor marca y 2ª mejor marca: casilla verde con el premio si la tiene; roja con 0 si no */
   const markBox = (lb, k, eur) => `<div class="mebox" data-nav="semanal|t.sg=gen|${HL}|sc=best${k}"><span class="lb">${lb}</span><span class="big">${hasMark(k) ? `<b class="money prize">${eur2(eur)}</b>` : `<b class="money noprize">${eur2(0)}</b>`}</span></div>`;
   const box = (lb, pos, prize, val, unit, nav) => `<div class="mebox" data-nav="${nav}|${HL}"><span class="lb">${lb}</span><span class="big"><b class="${prize ? "prize" : "noprize"}">${pos}º</b><span>${val}<small>${unit}</small></span></span></div>`;
-  const semBox = `<div class="mebox" data-nav="semanal|t.sg=sem|${HL}"><span class="lb">Semanal</span><span class="big"><b class="money ${sem.total > 0 ? "prize" : "noprize"}">${eur2(sem.total)}</b></span></div>`;
+  const semBox = `<div class="mebox" data-nav="semanal|t.sg=sem|${HL}"><span class="lb lb2">Premios semanales</span><span class="big"><b class="money ${sem.total > 0 ? "prize" : "noprize"}">${eur2(sem.total)}</b></span></div>`;
   const total = sem.total + marks + ligaEur + genEur;
   let boxes;
   if (C.marks.length > 1) boxes = `<div class="megrid c3">` + box("General", gi + 1, gi < C.genPrize, gt.total, " pts", "semanal|t.sg=gen") + box("Liga Regular", li + 1, li < C.ligaPrize, lpts(lt.pts), " pts", "liga|t.liga=clas") +
       (g ? box(`Champions · ${g}`, ci + 1, ci < C.champ.pass, champ[g].clas[ci].pts, " pts", `champions|t.champ=${g}`) : "") + semBox + markBox("1ª mejor marca", 1, C.marks[0]) + markBox("2ª mejor marca", 2, C.marks[1]);
   else boxes = `<div class="megrid c3">` + box("General", gi + 1, gi < C.genPrize, gt.total, " pts", "semanal|t.sg=gen") + box("Liga Regular", li + 1, li < C.ligaPrize, lpts(lt.pts), " pts", "liga|t.liga=clas") + semBox + markBox("Mejor marca", 1, C.marks[0]);
   let h = `<div class="mepage"><div class="nhead phead">${T === MI_EQUIPO ? "Cómo voy" : "Cómo va"}</div>` + boxes +
-    `<div class="mebox money"><span class="lb">Premios</span><span class="rowsx"><span>Semanal (ya ganado)</span><span>${eur2(sem.total)}</span>` +
+    `<div class="mebox money"><span class="lb">Premios</span><span class="rowsx"><span>Premios semanales (ya ganado)</span><span>${eur2(sem.total)}</span>` +
       `<span>Liga Regular (si acabara hoy)</span><span>${eur2(ligaEur)}</span><span>General (si acabara hoy)</span><span>${eur2(genEur)}</span>` +
       (champ ? `<span>Champions (pendiente de playoff)</span><span>–</span>` : "") +
       `<span>${C.marks.length > 1 ? "Mejores marcas" : "Mejor marca"} (si acabara hoy)</span><span>${eur2(marks)}</span></span>` +
