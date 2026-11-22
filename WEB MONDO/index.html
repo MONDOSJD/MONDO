@@ -807,6 +807,9 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
 .alq .alst { display: none; }
 .alq .alw { display: block; font: 700 11px/1 var(--font-display); letter-spacing: .08em; color: inherit; opacity: .85; }
 .alq[data-st="pend"], .alq[data-st="alarm"], .alq[data-st="late"] { background: #d90429; border: 2px solid #8f0016; color: #fff; }
+/* cuadrados en blanco siempre; solo se ponen en rojo (parpadeando) cuando la alarma está activa: última hora antes del inicio y sin detener (Ricardo 22/11/2026) */
+.alq[data-st] { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+.alq[data-st="alarm"] { background: #d90429; border: 2px solid #8f0016; color: #fff; }
 .alpage .albox { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 6px 14px; }
 .alpage .alrow { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 17px; }
 .alpage .alrow:first-child { border-top: 0; }
@@ -829,7 +832,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1795373530";</script>
+<script>window.MONDO_BUILD = "1795373900";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1632,14 +1635,11 @@ let ALM = {}, ALM_ST = "loading", ALM_DB = null, ALM_BUSY = false;
 const almFmt = iso => { try { return new Date(iso).toLocaleString("es-ES", { timeZone: "Europe/Madrid", weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }); } catch (e) { return iso; } };
 const almHM = ms => new Date(ms).toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit" });
 function almState(k) {
-  /* Saldo real leído cada noche del dashboard de la competición (d.saldo). Verde = saldo ≥ 0 o confirmado OK; rojo = saldo negativo (Ricardo 22/11/2026) */
-  const d = ALM[k]; if (!d) return { s: "none", t: "Sin datos" };
-  const hasS = typeof d.saldo === "number", conf = !!d.start && d.confirmedStart === d.start;
-  if (conf || (hasS && d.saldo >= 0)) return { s: "ok", t: "✓ Positivo" };
-  if (!hasS) return { s: "none", t: "Sin datos" };
-  if (!d.start) return { s: "pend", t: "Negativo" };
+  /* Alarma de inicio de jornada (Ricardo 22/11/2026): cuadrado en blanco; se activa (rojo) 1 hora antes del inicio hasta que Ricardo la detiene. Sin mirar saldos. */
+  const d = ALM[k]; if (!d || !d.start) return { s: "none", t: "" };
+  if (d.confirmedStart === d.start) return { s: "ok", t: "" };
   const st = Date.parse(d.start), now = Date.now();
-  if (now >= st) return { s: "late", t: "Ya empezó" };
+  if (now >= st) return { s: "late", t: "" };
   if (st - now <= 60 * 60000) return { s: "alarm", t: "¡Confirma ya!" };
   return { s: "pend", t: "Pendiente" };
 }
@@ -1682,14 +1682,11 @@ function alarmaView() {
   const ms = Date.parse(d.start);
   h += `<div class="albox"><div class="alrow"><span>Próxima jornada</span><b>${esc(d.label || "")}</b></div>` +
     `<div class="alrow"><span>Empieza</span><b>${esc(almFmt(d.start))}</b></div>` +
-    (typeof d.saldo === "number" ? `<div class="alrow"><span>Saldo (dashboard)</span><b style="color:${d.saldo < 0 ? "#d90429" : "#1E7A4C"}">${d.saldo.toLocaleString("es-ES")} €</b></div>` +
-      (d.saldoAt ? `<div class="alrow"><span>Leído</span><b>${esc(new Date(d.saldoAt).toLocaleString("es-ES", { timeZone: "Europe/Madrid", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }))}</b></div>` : "") : "") +
-    `<div class="alrow"><span>Aviso si estás en negativo</span><b>${almHM(ms - 60 * 60000)} (1 hora antes)</b></div>` +
+    `<div class="alrow"><span>La alarma suena desde</span><b>${almHM(ms - 60 * 60000)} (1 hora antes)</b></div>` +
     (d.note ? `<p class="alnote">${esc(d.note)}</p>` : "") + `</div>`;
-  if (st.s === "ok" && d.confirmedStart === d.start) h += `<div class="alok"><b>✓ Confirmado: estás en positivo</b><span>${esc(almFmt(d.confirmedAt))}</span></div><button class="alundo" data-almundo="${k}">Deshacer</button>`;
-  else if (st.s === "ok") h += `<div class="alok"><b>✓ Saldo positivo</b><span>Según el dashboard. No sonará ninguna alarma.</span></div>`;
-  else if (st.s === "late") h += `<div class="allate">La jornada ya ha empezado sin confirmar.</div>`;
-  else h += `<button class="algo${st.s === "alarm" ? " hot" : ""}" data-almok="${k}"${ALM_BUSY ? " disabled" : ""}>Estoy en positivo · OK</button><p class="alnote">${st.s === "none" ? "Todavía no hay saldo leído del dashboard." : "Según el dashboard estás en negativo."} Te aviso 1 hora antes y cada 15 minutos hasta que pulses OK.</p>`;
+  if (st.s === "ok") h += `<div class="alok"><b>✓ Alarma detenida</b><span>${esc(almFmt(d.confirmedAt))}</span></div><button class="alundo" data-almundo="${k}">Volver a activar</button>`;
+  else if (st.s === "late") h += `<div class="allate">La jornada ya ha empezado.</div>`;
+  else h += `<button class="algo${st.s === "alarm" ? " hot" : ""}" data-almok="${k}"${ALM_BUSY ? " disabled" : ""}>Detener alarma · lo tengo controlado</button><p class="alnote">La alarma suena 1 hora antes del inicio y cada 5 minutos hasta que la detengas.</p>`;
   return h + `</div>`;
 }
 const ROUTES = {
