@@ -794,6 +794,15 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
 .alq[data-st="late"] .alst, .alq[data-st="none"] .alst { background: var(--surface2); color: var(--ink2); }
 @keyframes almPulse { from { box-shadow: 0 0 0 0 rgba(217,4,41,.0); } to { box-shadow: 0 0 0 6px rgba(217,4,41,.35); } }
 @media (prefers-reduced-motion: reduce) { .alq[data-st="alarm"] { animation: none; } }
+/* alarmas compactas: las 4 en una línea; verde entero cuando está confirmado en positivo (Ricardo 22/11/2026) */
+.alarms { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px; }
+.alq { aspect-ratio: auto; min-height: 84px; padding: 7px 3px; gap: 4px; border-radius: 11px; }
+.alq .alball { width: 20px; height: 20px; }
+.alq .alw { display: none; }
+.alq .aln { font: 800 14px/1.05 var(--font-display); letter-spacing: 0; }
+.alq .alst { font-size: 10.5px; letter-spacing: .02em; padding: 3px 5px; border-radius: 5px; margin-top: 0; }
+.alq[data-st="ok"] { background: #39FF6A; border: 2px solid #1E7A4C; color: #062B14; }
+.alq[data-st="ok"] .alst { background: #1E7A4C; color: #fff; }
 .alpage .albox { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 6px 14px; }
 .alpage .alrow { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 17px; }
 .alpage .alrow:first-child { border-top: 0; }
@@ -816,7 +825,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1795372478";</script>
+<script>window.MONDO_BUILD = "1795373020";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1621,7 +1630,7 @@ const almHM = ms => new Date(ms).toLocaleTimeString("es-ES", { timeZone: "Europe
 function almState(k) {
   const d = ALM[k]; if (!d || !d.start) return { s: "none", t: "Sin programar" };
   const st = Date.parse(d.start), now = Date.now(), ok = d.confirmedStart === d.start;
-  if (ok) return { s: "ok", t: "Confirmado" };
+  if (ok) return { s: "ok", t: "✓ Positivo" };
   if (now >= st) return { s: "late", t: "Ya empezó" };
   if (st - now <= 60 * 60000) return { s: "alarm", t: "¡Confirma ya!" };
   return { s: "pend", t: "Pendiente" };
