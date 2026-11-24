@@ -832,7 +832,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1795466887";</script>
+<script>window.MONDO_BUILD = "1795539100";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1686,7 +1686,7 @@ function alarmaView() {
     (d.note ? `<p class="alnote">${esc(d.note)}</p>` : "") + `</div>`;
   if (st.s === "ok") h += `<div class="alok"><b>✓ Alarma detenida</b><span>${esc(almFmt(d.confirmedAt))}</span></div><button class="alundo" data-almundo="${k}">Volver a activar</button>`;
   else if (st.s === "late") h += `<div class="allate">La jornada ya ha empezado.</div>`;
-  else h += `<button class="algo${st.s === "alarm" ? " hot" : ""}" data-almok="${k}"${ALM_BUSY ? " disabled" : ""}>Detener alarma · lo tengo controlado</button><p class="alnote">La alarma suena 1 hora antes del inicio y cada 5 minutos hasta que la detengas.</p>`;
+  else h += `<button class="algo${st.s === "alarm" ? " hot" : ""}" data-almok="${k}"${ALM_BUSY ? " disabled" : ""}>Detener alarma · lo tengo controlado</button><p class="alnote">La alarma suena 1 hora antes del inicio y cada 2 minutos hasta que la detengas.</p>`;
   return h + `</div>`;
 }
 const ROUTES = {
