@@ -845,7 +845,7 @@ ol.normas { gap: 6px; } ol.normas li { padding: 7px 10px; }
   <main id="view" class="view"></main>
 </div>
 
-<script>window.MONDO_BUILD = "1795591100";</script>
+<script>window.MONDO_BUILD = "1795592000";</script>
 <script>
 const DATA = {};
 /* última actualización por competición (Ricardo 21/10): fecha de la última modificación de sus Excel */
@@ -1397,10 +1397,12 @@ function cronicaText(T, N) {
   const mtxt = (x, z = "") => {
     const op = NM(x.op), sc = `(${fmt(x.gf)}-${fmt(x.gc)})`, hi = Math.max(x.gf, x.gc) || 1, rel = Math.abs(x.gf - x.gc) / hi;
     if (x.r === "v") return rel >= .35 ? pickV([`arrollaste a ${op} ${sc}`, `pasaste por encima de ${op} ${sc}`, `le diste un repaso a ${op} ${sc}`], "V" + z + x.op)
-      : rel <= .06 ? pickV([`ganaste por la mínima a ${op} ${sc}`, `sacaste un triunfo muy apretado ante ${op} ${sc}`], "v1" + z + x.op)
+      : Math.abs(x.gf - x.gc) === 1 ? pickV([`ganaste por la mínima a ${op} ${sc}`, `ganaste por un solo punto a ${op} ${sc}`], "v1" + z + x.op) /* "por la mínima" SOLO si es por 1 punto (Ricardo 25/11/2026) */
+      : rel <= .06 ? pickV([`sacaste un triunfo muy apretado ante ${op} ${sc}`, `ganaste en un final ajustado a ${op} ${sc}`], "v2" + z + x.op)
       : pickV([`ganaste a ${op} ${sc}`, `te impusiste a ${op} ${sc}`, `derrotaste a ${op} ${sc}`], "v" + z + x.op);
     if (x.r === "d") return rel >= .35 ? pickV([`fuiste arrollado por ${op} ${sc}`, `recibiste un serio correctivo de ${op} ${sc}`, `naufragaste ante ${op} ${sc}`], "D" + z + x.op)
-      : rel <= .06 ? pickV([`caíste por muy poco ante ${op} ${sc}`, `se te escapó por un suspiro ante ${op} ${sc}`], "d1" + z + x.op)
+      : Math.abs(x.gf - x.gc) === 1 ? pickV([`caíste por la mínima ante ${op} ${sc}`, `perdiste por un solo punto ante ${op} ${sc}`], "d1" + z + x.op)
+      : rel <= .06 ? pickV([`caíste en un final apretado ante ${op} ${sc}`, `perdiste en un duelo muy igualado ante ${op} ${sc}`], "d2" + z + x.op)
       : pickV([`caíste ante ${op} ${sc}`, `perdiste contra ${op} ${sc}`], "d" + z + x.op);
     return `firmaste tablas con ${op} ${sc}`;
   };
